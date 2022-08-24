@@ -6,6 +6,9 @@ int main() {
 
 	Tag test;
 	
-	test.runTest();
+	test.id = -4;
+
+	std::cout << test.toString() << std::endl;
+
 	return 0;
 }
