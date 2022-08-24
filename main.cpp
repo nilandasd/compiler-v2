@@ -1,12 +1,10 @@
 #include <iostream>
-#include "tag.hpp"
+#include "token.hpp"
 
 int main() {
 	std::cout << "Hello World!" << std::endl;
 
-	Tag test;
-	
-	test.id = -4;
+	Token test(-4);
 
 	std::cout << test.toString() << std::endl;
 
