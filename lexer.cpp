@@ -70,15 +70,15 @@ Token* Lexer::getToken() {
 }
 
 void Lexer::readNum(char c) {
-  int x = c - '0';
+  string x(1, c);
 
   while ( isdigit(ss->peek()) ) {
     ss->get(c);
 
-    x += c - '0';
+    x += c;
   }
 
-  NumToken* t = new NumToken(x);
+  NumToken* t = new NumToken(stoi(x));
   tokens.push_back(t);
 }
 

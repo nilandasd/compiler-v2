@@ -27,3 +27,6 @@ lexer:
 
 clean:
 	rm *.o
+
+spotless:
+	rm *.o $(EXEC) lex_test token_test

@@ -63,10 +63,60 @@ void test_two() {
   assert(t6->id == END);
 }
 
+void test_three() {
+  std::stringstream ss;
+  ss << "0 123 99999 1";
+
+  Lexer lex(&ss);
+  lex.analyze();
+
+  NumToken* t1 = (NumToken*)lex.getToken();
+  NumToken* t2 = (NumToken*)lex.getToken();
+  NumToken* t3 = (NumToken*)lex.getToken();
+  NumToken* t4 = (NumToken*)lex.getToken();
+  NumToken* t5 = (NumToken*)lex.getToken();
+
+  assert(t1->id == NUM);
+  assert(t1->attr == 0);
+  assert(t2->id == NUM);
+  assert(t2->attr == 123);
+  assert(t3->id == NUM);
+  assert(t3->attr == 99999);
+  assert(t4->id == NUM);
+  assert(t4->attr == 1);
+  assert(t5->id == END);
+}
+
+/*
+void test_four() {
+  std::stringstream ss;
+  ss << "99999999999";
+
+  Lexer lex(&ss);
+  lex.analyze();
+  
+  NumToken* t1 = (NumToken*)lex.getToken();
+
+  assert(t1->id == NUM);
+  assert(t1->attr == 0);
+}*/
+
+void test_five() {
+  std::stringstream ss;
+  
+  Lexer lex(&ss);
+
+  Token* t = lex.getToken();
+
+  assert(t == NULL);
+}
+
 
 
 int main() {
   test_one();
   test_two();
   test_three();
+  //test_four();
+  test_five();
 }
