@@ -63,14 +63,13 @@ Token* Lexer::getToken() {
   if (tokens.empty()) return NULL;
 
   Token* result = tokens.front();
-  std::cout << result->toString() << std::endl;
   tokens.pop_front();
 
   return result;
 }
 
 void Lexer::readNum(char c) {
-  string x(1, c);
+  std::string x(1, c);
 
   while ( isdigit(ss->peek()) ) {
     ss->get(c);
@@ -83,7 +82,7 @@ void Lexer::readNum(char c) {
 }
 
 void Lexer::readId(char c) {
-  string s(1, c);
+  std::string s(1, c);
 
   while ( isalpha(ss->peek()) ) {
     ss->get(c);

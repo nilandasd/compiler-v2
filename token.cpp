@@ -6,9 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-using namespace std;
-
-unordered_map<int, string> specialTokens ({
+std::unordered_map<int, std::string> specialTokens ({
   { EQ,  "==" },
   { NEQ, "!=" },
   { GTE, ">=" },
@@ -16,7 +14,7 @@ unordered_map<int, string> specialTokens ({
   { END, "$"  }
 });
 
-unordered_map<string, int> reservedWords ({
+std::unordered_map<std::string, int> reservedWords ({
   { "if",     IF     },
   { "else",   ELSE   },
   { "while",  WHILE  },
@@ -27,23 +25,22 @@ unordered_map<string, int> reservedWords ({
 
 Token::Token(int n): id(n) {}
 
-string Token::toString() {
+std::string Token::toString() {
   if ( id < 0 ) {
     return specialTokens[id];    
   } else {
-    return string(1, static_cast<char>(id));
+    return std::string(1, static_cast<char>(id));
   }
 }
 
-IdToken::IdToken(string s): Token(ID), attr(s), reservedWord(false) {
+IdToken::IdToken(std::string s): Token(ID), attr(s) {
   if (reservedWords.find(s) != reservedWords.end()) {
-    reservedWord = true;
     id = reservedWords[s];
   }
 }
 
-string IdToken::toString() {
-  if ( reservedWord ) {
+std::string IdToken::toString() {
+  if ( id != ID) {
     return capitalizeString(attr);
   } else {
     return "ID";
@@ -52,6 +49,6 @@ string IdToken::toString() {
 
 NumToken::NumToken(int x): Token(NUM), attr(x) {}
 
-string NumToken::toString() {
+std::string NumToken::toString() {
   return "NUM";
 }

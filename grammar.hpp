@@ -1,25 +1,25 @@
 // grammar.hpp
 
+#pragma once
+
 #include <vector>
-
-
+#include <unordered_map>
 
 class Nonterminal {
   public:
-    Nonterminal();
-
     int head;
     vector<vector<int>> productions;
+
+    Nonterminal();
+
 };
 
 class Grammar {
   public:
-    readGrammar();
-
-    unordered_map<int, Nonterminal> nonterminals;
     unordered_map<string, int> symbols;
+    unordered_map<int, Nonterminal> nonterminals;
 
-  private:
-
+    Grammar();
+    readGrammar();
 
 };

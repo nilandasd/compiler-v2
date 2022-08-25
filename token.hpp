@@ -1,10 +1,9 @@
 // token.hpp
 
 #pragma once
+
 #include <string>
 #include <unordered_map>
-
-using namespace std;
 
 //TOKEN IDS
 #define ID   -1
@@ -38,16 +37,16 @@ class Token {
     int attr = NULL;
 
     Token(int n);
-    virtual string toString();
+    virtual std::string toString();
 };
 
 class IdToken: public Token {
   public:
-    string attr;
+    std::string attr;
     bool reservedWord;
 
-    IdToken(string s);
-    virtual string toString();
+    IdToken(std::string s);
+    virtual std::string toString();
 };
 
 class NumToken: public Token {
@@ -55,5 +54,5 @@ class NumToken: public Token {
     int attr;
 
     NumToken(int x);
-    virtual string toString();
+    virtual std::string toString();
 };

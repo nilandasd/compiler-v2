@@ -1,5 +1,7 @@
 // lexer.hpp
 
+#pragma once
+
 #include "token.hpp"
 #include <deque>
 #include <sstream>
