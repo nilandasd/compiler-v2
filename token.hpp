@@ -35,6 +35,7 @@ it represents.
 class Token {
   public:
     int id;
+    int attr = NULL;
 
     Token(int n);
     virtual string toString();

@@ -1,12 +1,22 @@
+//  main.cpp
+
 #include <iostream>
 #include "token.hpp"
+#include "lexer.hpp"
+#include <iostream>
+#include <sstream>
 
 int main() {
-	std::cout << "Hello World!" << std::endl;
+  std::stringstream ss;
+  ss << "testng 1 2 3 ! :)";
+  Lexer lex(&ss);
+  lex.analyze();
 
-	Token test(-4);
+  Token* t = lex.getToken();
 
-	std::cout << test.toString() << std::endl;
-
-	return 0;
+  IdToken* i = (IdToken*)t;
+  std::cout << t->toString() << std::endl;
+  std::cout << i->attr << std::endl;
+ 
+  return 0;
 }
