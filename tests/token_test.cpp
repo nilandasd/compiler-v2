@@ -17,14 +17,12 @@ void test_IdToken() {
   assert(t1.id == ID);
   assert(t1.toString().compare("ID") == 0);
   assert(t1.attr.compare("test") == 0);
-  assert(t1.reservedWord == false);
 
   IdToken t2("if");
 
   assert(t2.id == IF);
   assert(t2.toString().compare("IF") == 0);
   assert(t2.attr.compare("if") == 0);
-  assert(t2.reservedWord == true);
 }
 
 void test_NumToken() {

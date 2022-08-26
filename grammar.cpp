@@ -20,9 +20,9 @@ void Grammar::read() {
   while (ss->getline(l, 256)) {
     std::string line(l);
 
-    if (emptyline(line)) continue;
+    if (empty(line)) continue;
 
-    if (onlyalpha(line))
+    if (!alpha(line))
       throw std::runtime_error("BAD GRAMMAR FILE: nonterminal can only be letters");
 
     readNonterminal(line);
@@ -43,7 +43,7 @@ void Grammar::readProductions(Nonterminal* nt) {
   while (ss->getline(l, 256)) {
     std::string line(l);
 
-    if (emptyline(line)) break;
+    if (empty(line)) break;
 
     validateProduction(line);
     
@@ -58,7 +58,7 @@ void Grammar::readProductions(Nonterminal* nt) {
 std::vector<int> Grammar::parseProduction(std::string line) {
   std::vector<int> prod;
   std::vector<std::string> words = getwords(line.substr(2, line.size() - 1));
-
+ 
   for (std::string w: words)
     prod.push_back(serialize(w));
 
