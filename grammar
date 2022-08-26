@@ -1,0 +1,35 @@
+START
+	| STMTS
+
+STMTS
+	| STMTS STMT
+	| STMT
+
+BLOCK
+	| { STMTS }
+
+STMT
+	| IF ( EXPR ) BLOCK
+	| IF ( EXPR ) BLOCK ELSE BLOCK
+	| WHILE ( EXPR ) BLOCK
+	| EXPR ;
+	| VAR ID TYPE ;
+	| ID = EXPR ;
+
+EXPR
+	| ( EXPR )
+	| EXPR == EXPR
+	| EXPR != EXPR
+	| EXPR >= EXPR
+	| EXPR >  EXPR
+	| EXPR <= EXPR
+	| EXPR <  EXPR
+	| EXPR *  EXPR
+	| EXPR /  EXPR
+	| EXPR +  EXPR
+	| EXPR -  EXPR
+	| ID
+	| NUM
+
+TYPE
+	| INT

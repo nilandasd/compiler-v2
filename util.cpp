@@ -10,3 +10,9 @@ std::string capitalizeString(std::string s) {
 
   return result;
 }
+
+bool emptyLine(std::string s) {
+  for (auto & c: s) if ( !isspace(c) ) return false;  
+
+  return true;
+}
