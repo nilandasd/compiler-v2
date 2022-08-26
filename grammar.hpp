@@ -3,32 +3,36 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <unordered_map>
+#include "token.hpp"
 
 class Nonterminal {
   public:
     int head;
-    vector<vector<int>> productions;
+    std::vector<std::vector<int>> productions;
 
     Nonterminal(int x): head(x) {};
 };
 
 class Grammar {
   public:
-    unordered_map<string, int> symbols;
-    unordered_map<int, Nonterminal> nonterminals;
+    std::unordered_map<std::string, int> symbols;
+    std::unordered_map<int, Nonterminal*> nonterminals;
 
     Grammar(std::stringstream* s): ss{s} {};
+
     void read();
-    int tokenToSymbol(Token* t);
+    void augmentStart();
+    int tokenSymbol(Token* t);
 
   private:
-    void readNonterminal(string s);
+    void readNonterminal(std::string s);
     void readProductions(Nonterminal* nt);
-    vector<int> parseProduction(string s);
-    void validateProduction(string s);
-    int serialize(string s);
+    std::vector<int> parseProduction(std::string s);
+    void validateProduction(std::string s);
+    int serialize(std::string s);
 
     std::stringstream* ss;
-    int symbolCounter = 256;
+    int symbolCounter = 0;
 };

@@ -1,22 +1,29 @@
 // grammar.cpp
 
 #include "grammar.hpp"
-#include "util.cpp"
+#include "util.hpp"
 #include "token.hpp"
 #include <vector>
+#include <string>
+#include <sstream>
+#include <stdexcept>
+#include <iostream>
+
 
 int Grammar::tokenSymbol(Token* t) {
-  return serialize(t.toString());
+  return serialize(t->toString());
 }
 
-Grammar::read() {
-  std::string line;
+void Grammar::read() {
+  char l[256];
 
-  while (std::getline(ss, line)) {
+  while (ss->getline(l, 256)) {
+    std::string line(l);
+
     if (emptyline(line)) continue;
 
     if (onlyalpha(line))
-      throw std::exception("BAD GRAMMAR FILE: nonterminal can only be letters");
+      throw std::runtime_error("BAD GRAMMAR FILE: nonterminal can only be letters");
 
     readNonterminal(line);
   }
@@ -26,28 +33,33 @@ void Grammar::readNonterminal(std::string head) {
   Nonterminal* nt = new Nonterminal( serialize(head));
 
   readProductions(nt);
+
+  nonterminals[nt->head] = nt;
 }
 
 void Grammar::readProductions(Nonterminal* nt) {
-  std::string line;
+  char l[256];
 
-  while (std::getline(ss, line)) {
+  while (ss->getline(l, 256)) {
+    std::string line(l);
+
     if (emptyline(line)) break;
 
     validateProduction(line);
     
-    vector<int> production = parseProduction(line);
-    nt.body.push_back(production);
+    std::vector<int> production = parseProduction(line);
+    nt->productions.push_back(production);
   }
 
-  if (nt.body.size() == 0) throw std::exception("BAD GRAMMAR FILE: Nonterminal must have at least one production");
+  if (nt->productions.size() == 0) 
+    throw std::runtime_error("BAD GRAMMAR FILE: Nonterminal must have at least one production");  
 }
 
-vector<int> Grammar::parseProduction(std::string line) {
-  vector<int> prod;
-  vector<string> words = words(line);
+std::vector<int> Grammar::parseProduction(std::string line) {
+  std::vector<int> prod;
+  std::vector<std::string> words = getwords(line.substr(2, line.size() - 1));
 
-  for (string w: words)
+  for (std::string w: words)
     prod.push_back(serialize(w));
 
   return prod;
@@ -55,10 +67,10 @@ vector<int> Grammar::parseProduction(std::string line) {
 
 void Grammar::validateProduction(std::string line) {
   if ( line.length() < 2 || line[0] != '\t' || line[1] != '|' )
-    throw std::exception("BAD GRAMMAR FILE: invalid production");
+    throw std::runtime_error("BAD GRAMMAR FILE: invalid production"); 
 }
 
-int Grammar::serialize(string s) {
+int Grammar::serialize(std::string s) {
   if (symbols.find(s) != symbols.end()) return symbols[s];
 
   symbolCounter++;

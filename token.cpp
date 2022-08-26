@@ -1,7 +1,7 @@
 //token.cpp
 
 #include "token.hpp"
-#include "util.cpp"
+#include "util.hpp"
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -41,7 +41,7 @@ IdToken::IdToken(std::string s): Token(ID), attr(s) {
 
 std::string IdToken::toString() {
   if ( id != ID) {
-    return capitalizeString(attr);
+    return capitalize(attr);
   } else {
     return "ID";
   }

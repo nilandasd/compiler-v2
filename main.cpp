@@ -3,7 +3,7 @@
 #include <iostream>
 #include "token.hpp"
 #include "lexer.hpp"
-#include <iostream>
+#include "grammar.hpp"
 #include <sstream>
 
 int main() {
@@ -17,6 +17,12 @@ int main() {
   IdToken* i = (IdToken*)t;
   std::cout << t->toString() << std::endl;
   std::cout << i->attr << std::endl;
- 
+  
+  std::stringstream sss;
+  Grammar grammar(&sss);
+
+  sss << "START\n\t| this is a test\n\t| did it work?";
+  grammar.read();
+
   return 0;
 }
