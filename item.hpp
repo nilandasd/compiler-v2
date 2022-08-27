@@ -2,16 +2,23 @@
 
 #pragma once
 
+#include <vector>
+
+#define DNE -1
+#define CURSOR -2
+
 class Item {
   public:
-    Item();
+    Item(int h, std::vector<int> b, int la): head(h), body(b), lookahead(la) {};
 
     int head;
-    vector<int> body;
+    std::vector<int> body;
     int lookahead;
 
-    expects();
-    shiftCursor();
-  private:
+    int expects();
+    Item shiftCursor();
+    std::vector<int> postfix();
 
+    bool operator==(const Item& i);
+    bool operator!=(const Item& i);
 };

@@ -102,7 +102,7 @@ void test_four() {
   try {
     G.read();
     assert(true == false);
-  } catch(std::runtime_error e) {
+  } catch(std::runtime_error &e) {
     std::string w(e.what());
     assert(w.compare("BAD GRAMMAR FILE: nonterminal can only be letters") == 0);
   }
@@ -117,7 +117,7 @@ void test_five() {
   try {
     G.read();
     assert(true == false);
-  } catch(std::runtime_error e) {
+  } catch(std::runtime_error &e) {
     std::string w(e.what());
     assert(w.compare("BAD GRAMMAR FILE: Nonterminal must have at least one production") == 0);
   }
@@ -132,7 +132,7 @@ void test_six() {
   try {
     G.read();
     assert(true == false);
-  } catch(std::runtime_error e) {
+  } catch(std::runtime_error &e) {
     std::string w(e.what());
     assert(w.compare("BAD GRAMMAR FILE: invalid production") == 0);
   }

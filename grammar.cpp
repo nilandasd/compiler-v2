@@ -14,6 +14,17 @@ int Grammar::tokenSymbol(Token* t) {
   return serialize(t->toString());
 }
 
+void Grammar::augmentStart() {
+  Nonterminal* nt = new Nonterminal( serialize("AUGMENTED_START"));
+  std::vector<int> production { 0 };
+  nt->productions.push_back(production); // 0 the first nonterminal is 0, which is defaulted as the start symbol
+  nonterminals[nt->head] = nt;
+}
+
+std::vector<int> Grammar::first(std::vector<int> v) {
+  return v;
+}
+
 void Grammar::read() {
   char l[256];
 
