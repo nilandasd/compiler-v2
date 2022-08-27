@@ -4,6 +4,7 @@
 #include "../lexer.hpp"
 #include <iostream>
 #include <cassert>
+#include <string>
 
 void test_one() {
   std::stringstream ss;
@@ -92,8 +93,57 @@ void test_three() {
   assert(nt->productions[0][0] == G.symbols["w2"]);
 }
 
+void test_four() {
+  std::stringstream ss;
+  Grammar G(&ss);
+
+  ss << "START2903875\n\t| w1\n";
+
+  try {
+    G.read();
+    assert(true == false);
+  } catch(std::runtime_error e) {
+    std::string w(e.what());
+    assert(w.compare("BAD GRAMMAR FILE: nonterminal can only be letters") == 0);
+  }
+}
+
+void test_five() {
+  std::stringstream ss;
+  Grammar G(&ss);
+
+  ss << "START\n\n\t| w1\n";
+
+  try {
+    G.read();
+    assert(true == false);
+  } catch(std::runtime_error e) {
+    std::string w(e.what());
+    assert(w.compare("BAD GRAMMAR FILE: Nonterminal must have at least one production") == 0);
+  }
+}
+
+void test_six() {
+  std::stringstream ss;
+  Grammar G(&ss);
+
+  ss << "START\n\tbad w1\n";
+
+  try {
+    G.read();
+    assert(true == false);
+  } catch(std::runtime_error e) {
+    std::string w(e.what());
+    assert(w.compare("BAD GRAMMAR FILE: invalid production") == 0);
+  }
+}
+
+
 int main() {
   test_one();
   test_two();
   test_three();
+  test_four();
+  test_five();
+  test_six();
 }

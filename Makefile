@@ -10,6 +10,7 @@ test: tests
 	./lex_test
 	./token_test
 	./grammar_test
+	./util_test
 
 tests: token lexer token_test lexer_test grammar_test grammar util util_test
 	$(LINK) lex_test lexer_test.o token.o lexer.o grammar.o util.o
