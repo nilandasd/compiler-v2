@@ -6,7 +6,7 @@
 #include <cassert>
 #include <string>
 
-void test_one() {
+void test_read1() {
   std::stringstream ss;
   Grammar G(&ss);
 
@@ -31,7 +31,7 @@ void test_one() {
   assert(nt->productions[0][2] == G.symbols["w3"]);
 }
 
-void test_two() {
+void test_read2() {
   std::stringstream ss;
   Grammar G(&ss);
   
@@ -62,7 +62,7 @@ void test_two() {
   assert(nt->productions[1][1] == G.symbols["w5"]);
 }
 
-void test_three() {
+void test_read3() {
   std::stringstream ss;
   Grammar G(&ss);
 
@@ -93,7 +93,7 @@ void test_three() {
   assert(nt->productions[0][0] == G.symbols["w2"]);
 }
 
-void test_four() {
+void test_bad_nonterminal() {
   std::stringstream ss;
   Grammar G(&ss);
 
@@ -108,7 +108,7 @@ void test_four() {
   }
 }
 
-void test_five() {
+void test_missing_productions() {
   std::stringstream ss;
   Grammar G(&ss);
 
@@ -123,7 +123,7 @@ void test_five() {
   }
 }
 
-void test_six() {
+void test_invalid_production() {
   std::stringstream ss;
   Grammar G(&ss);
 
@@ -140,10 +140,10 @@ void test_six() {
 
 
 int main() {
-  test_one();
-  test_two();
-  test_three();
-  test_four();
-  test_five();
-  test_six();
+  test_read1();
+  test_read2();
+  test_read3();
+  test_bad_nonterminal();
+  test_missing_productions();
+  test_invalid_production();
 }

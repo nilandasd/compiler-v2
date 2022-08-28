@@ -5,7 +5,7 @@
 #include <sstream>
 #include <cassert>
 
-void test_one() {
+void test_analyze1() {
   std::stringstream ss;
   ss << "if else while func return var";
 
@@ -36,7 +36,7 @@ void test_one() {
   assert(t7->toString().compare("$") == 0);
 }
 
-void test_two() {
+void test_analyze2() {
   std::stringstream ss;
   ss << "test t If elsE test";
 
@@ -63,7 +63,7 @@ void test_two() {
   assert(t6->id == END);
 }
 
-void test_three() {
+void test_analyze3() {
   std::stringstream ss;
   ss << "0 123 99999 1";
 
@@ -88,7 +88,7 @@ void test_three() {
 }
 
 /*
-void test_four() {
+void test_analyze4() {
   std::stringstream ss;
   ss << "99999999999";
 
@@ -101,7 +101,7 @@ void test_four() {
   assert(t1->attr == 0);
 }*/
 
-void test_five() {
+void test_analyze5() {
   std::stringstream ss;
   
   Lexer lex(&ss);
@@ -114,9 +114,9 @@ void test_five() {
 
 
 int main() {
-  test_one();
-  test_two();
-  test_three();
-  //test_four();
-  test_five();
+  test_analyze1();
+  test_analyze2();
+  test_analyze3();
+  //test_analyze4();
+  test_analyze5();
 }
