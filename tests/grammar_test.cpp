@@ -1,10 +1,11 @@
-
+// grammar_test.cpp
 
 #include "../grammar.hpp"
 #include "../lexer.hpp"
 #include <iostream>
 #include <cassert>
 #include <string>
+#include <algorithm>
 
 void test_read1() {
   std::stringstream ss;
@@ -138,6 +139,53 @@ void test_invalid_production() {
   }
 }
 
+void test_first() {
+  std::stringstream ss;
+  Grammar G(&ss);
+
+  ss << "START\n\t| w1 w2 w3";
+
+  G.read();
+
+  assert(G.first(1).size() == 1);
+  assert(G.first(1)[0] == G.symbols["w1"]);
+
+  std::stringstream ss2;
+  ss2 << "START\n\t| AAA x x\n"
+         "\t| BBB x\n"
+         "\t| CCC\n"
+         "\t| 6 DDD\n\n"
+         "AAA\n"
+	 "\t| 1 x\n"
+         "\t| EEE\n\n"
+	 "BBB\n"
+ 	 "\t| 3\n"
+	 "\t| 4\n\n"
+         "CCC\n"
+	 "\t| BBB\n"
+         "\t| CCC x\n"
+         "\t| 5\n\n"
+         "DDD\n"
+	 "\t| x\n\n"
+         "EEE\n"
+	 "\t| 2\n\n"
+	 "FFF\n"
+	 "\t| x";
+
+  Grammar G2(&ss2);
+  G2.read();
+  
+  std::vector<int> f = G2.first(1);
+  assert(f.size() == 6);
+  assert(std::find(f.begin(), f.end(), G2.symbols["1"]) != f.end());
+  assert(std::find(f.begin(), f.end(), G2.symbols["2"]) != f.end());
+  assert(std::find(f.begin(), f.end(), G2.symbols["3"]) != f.end());
+  assert(std::find(f.begin(), f.end(), G2.symbols["4"]) != f.end());
+  assert(std::find(f.begin(), f.end(), G2.symbols["5"]) != f.end());
+  assert(std::find(f.begin(), f.end(), G2.symbols["6"]) != f.end());
+  assert(std::find(f.begin(), f.end(), G2.symbols["x"]) == f.end());
+}
+
 
 int main() {
   test_read1();
@@ -146,4 +194,5 @@ int main() {
   test_bad_nonterminal();
   test_missing_productions();
   test_invalid_production();
+  test_first();
 }

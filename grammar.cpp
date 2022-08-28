@@ -8,20 +8,50 @@
 #include <sstream>
 #include <stdexcept>
 #include <iostream>
+#include <set>
 
 
 int Grammar::tokenSymbol(Token* t) {
   return serialize(t->toString());
 }
 
+/*the first symbol of the grammar (i.e symbol with value 1)
+  is implicitly defined as the start symbol)*/
 void Grammar::augmentStart() {
   Nonterminal* nt = new Nonterminal( serialize("AUGMENTED_START"));
-  std::vector<int> production { 0 };
-  nt->productions.push_back(production); // 0 the first nonterminal is 0, which is defaulted as the start symbol
+  std::vector<int> production { 1 };
+  nt->productions.push_back(production); 
   nonterminals[nt->head] = nt;
 }
 
-std::vector<int> Grammar::first(std::vector<int> v) {
+
+/*This function would have to be changed durastically
+  if the grammar were altered to accept empty productions*/
+std::vector<int> Grammar::first(int i) {
+  std::set<int> s; 
+
+  if (nonterminals.find(i) == nonterminals.end()) {
+    s.insert(i);
+    std::vector v( s.begin(), s.end() );
+    return v;
+  }
+  Nonterminal *nt = nonterminals[i];
+ 
+  for ( auto &production : nt->productions ) {
+    int k = production[0];
+
+    if ( nt->head == k ) continue;
+
+    if(nonterminals.find(k) == nonterminals.end()) {
+      s.insert(k);
+    } else {
+      for (auto j : Grammar::first(k)) {
+        s.insert(j);
+      }
+    }
+  }
+
+  std::vector v( s.begin(), s.end() );
   return v;
 }
 

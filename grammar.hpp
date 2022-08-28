@@ -25,7 +25,7 @@ class Grammar {
     void read();
     void augmentStart();
     int tokenSymbol(Token* t);
-    std::vector<int> first(std::vector<int> v);
+    std::vector<int> first(int v);
 
   private:
     void readNonterminal(std::string s);

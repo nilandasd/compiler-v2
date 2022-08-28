@@ -12,6 +12,13 @@ void test_empty() {
   assert(empty("\t\n\t   "));
 }
 
+void test_alpha() {
+  assert(alpha("asdfasd"));
+  assert(!alpha("asdf876"));
+  assert(!alpha("    test   "));
+  assert(!alpha("9870870"));
+}
+
 void test_getwords() {
   std::string s1("TEST1 TEST2 TEST3");
 
@@ -35,5 +42,6 @@ void test_getwords() {
 
 int main() {
   test_empty();
+  test_alpha();
   test_getwords();
 }
