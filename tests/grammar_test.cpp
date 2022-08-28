@@ -186,6 +186,20 @@ void test_first() {
   assert(std::find(f.begin(), f.end(), G2.symbols["x"]) == f.end());
 }
 
+void test_augmentStart() {
+ std::stringstream ss;
+  Grammar G(&ss);
+
+  ss << "START\n\t| w1\n\nNT\n\t| w2";
+
+  G.read();
+  G.augmentStart();
+
+  assert(G.symbols.size() == 5);
+  assert(G.nonterminals.size() == 3);
+  assert(G.symbols["AUGMENTED_START"] == 5);
+}
+
 
 int main() {
   test_read1();
@@ -195,4 +209,5 @@ int main() {
   test_missing_productions();
   test_invalid_production();
   test_first();
+  test_augmentStart();
 }
