@@ -6,12 +6,15 @@
 #include <string>
 #include <unordered_map>
 
-std::unordered_map<int, std::string> specialTokens ({
-  { EQ,  "==" },
-  { NEQ, "!=" },
-  { GTE, ">=" },
-  { LTE, "<=" },
-  { END, "$"  }
+
+std::unordered_map<std::string, int> specialTokens ({
+  { "==", EQ   },
+  { "!=", NEQ  },
+  { ">=", GTE  },
+  { "<=", LTE  },
+  { "||", OR   },
+  { "&&", AND  },
+  { "$" , END  }
 });
 
 std::unordered_map<std::string, int> reservedWords ({
@@ -20,17 +23,20 @@ std::unordered_map<std::string, int> reservedWords ({
   { "while",  WHILE  },
   { "func",   FUNC   },
   { "var",    VAR    },
-  { "return", RETURN }
+  { "return", RETURN },
+  { "int",    INT    },
+  { "long",   LONG   }
 });
-
-Token::Token(int n): id(n) {}
 
 std::string Token::toString() {
   if ( id < 0 ) {
-    return specialTokens[id];    
-  } else {
-    return std::string(1, static_cast<char>(id));
+    for (auto& it: specialTokens) {
+      if ( it.second == id )
+        return it.first;    
+    }
   }
+  
+  return std::string(1, static_cast<char>(id));
 }
 
 IdToken::IdToken(std::string s): Token(ID), attr(s) {
@@ -46,8 +52,6 @@ std::string IdToken::toString() {
     return "ID";
   }
 }
-
-NumToken::NumToken(int x): Token(NUM), attr(x) {}
 
 std::string NumToken::toString() {
   return "NUM";

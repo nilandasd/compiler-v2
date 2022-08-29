@@ -12,17 +12,19 @@
 #define NEQ  -4
 #define GTE  -5
 #define LTE  -6
-#define END  -7
+#define AND  -7
+#define OR   -8
+#define END  -9
 
 //RESERVED WORDS
-#define IF     -8
-#define ELSE   -9
-#define WHILE  -10
-#define FUNC   -11
-#define RETURN -12
-#define VAR    -13
-#define INT    -14
-#define LONG   -15
+#define IF     -10
+#define ELSE   -11
+#define WHILE  -12
+#define FUNC   -13
+#define RETURN -14
+#define VAR    -15
+#define INT    -16
+#define LONG   -17
 
 /*
 All other tokens that are neither of type ID, NUM, Reservered Words, 
@@ -31,11 +33,13 @@ have an id equal to that of the ascii number for the character
 it represents.
 */
 
+extern std::unordered_map<std::string, int> specialTokens;
+
 class Token {
   public:
     int id;
 
-    Token(int n);
+    Token(int n): id(n) {}
     virtual std::string toString();
 };
 
@@ -52,6 +56,6 @@ class NumToken: public Token {
   public:
     int attr;
 
-    NumToken(int x);
+    NumToken(int x): Token(NUM), attr(x) {};
     virtual std::string toString();
 };

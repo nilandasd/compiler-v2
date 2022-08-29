@@ -21,34 +21,14 @@ void Lexer::analyze() {
       continue;
     }
 
-    if ( c == '=' ) {
-      if ( ss->peek() == '=' ) {
-	ss->get(c);
-        Token* t = new Token(EQ);
-        tokens.push_back(t);
-        continue;
-      }
-    } else if ( c == '!' ) {
-      if ( ss->peek() == '=' ) {
-        ss->get(c);
-        Token* t = new Token(NEQ);
-        tokens.push_back(t);
-        continue;
-      }
-    } else if ( c == '>' ) {
-	if ( ss->peek() == '=' ) {
-        ss->get(c);
-        Token* t = new Token(GTE);
-        tokens.push_back(t);
-        continue;
-      }                            
-    } else if ( c == '<' ) {
-      if ( ss->peek() == '=' ) {
-        ss->get(c);
-        Token* t = new Token(LTE);
-        tokens.push_back(t);
-        continue;
-      }
+    if ( checkPeek(c) ) {
+      std::string s;
+      s += c;
+      s += ss->peek();
+      if ( specialTokens.find(s) == specialTokens.end() ) return;
+      Token* t = new Token(specialTokens[s]);
+      tokens.push_back(t);
+      continue;
     }
 
     Token* t = new Token((int)c);
@@ -79,6 +59,11 @@ void Lexer::readNum(char c) {
 
   NumToken* t = new NumToken(stoi(x));
   tokens.push_back(t);
+}
+
+bool Lexer::checkPeek(char c) {
+  if (c == '=' || c == '!' || c == '<' || c == '>' || c == '&' || c == '|') return true;
+  return false;
 }
 
 void Lexer::readId(char c) {

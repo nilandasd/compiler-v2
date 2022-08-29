@@ -16,5 +16,6 @@ class Lexer {
     std::stringstream* ss;
     std::deque<Token*> tokens;
     void readId(char c); 
-    void readNum(char c); 
+    void readNum(char c);
+    bool checkPeek(char c); 
 };
