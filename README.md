@@ -1,8 +1,24 @@
 # compiler-v2
 
 LEXER:
-make lexer recognize '&&' and 'll' and add them to the grammar
+
+finish state.cpp
+finish slr.cpp
+finish lalr.cpp
+
 make lexer recognize strings
+
 make lexer recognize longs and floats
-reserver func, return, string
+
+reserve 'string'
+
+start chapter 5
+
+start chapter 6
+
+start chapter 7
+
+start chapter 8
+
+
 
