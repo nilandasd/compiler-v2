@@ -197,7 +197,7 @@ void test_augmentStart() {
 
   assert(G.symbols.size() == 5);
   assert(G.nonterminals.size() == 3);
-  assert(G.symbols["AUGMENTED_START"] == 5);
+  assert(G.symbols["AUGMENTED_START"] == -1);
 }
 
 

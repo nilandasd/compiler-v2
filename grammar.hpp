@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include "token.hpp"
 
+#define AUGMENTED_START -1
+
 class Nonterminal {
   public:
     int head;

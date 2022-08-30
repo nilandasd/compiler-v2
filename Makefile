@@ -3,20 +3,16 @@ G++ = g++-12 -std=c++17 -Wall
 BUILD = $(G++) -c
 LINK = $(G++) -o
 
-TEST_DIR=./tests/
-
-SRCS=token.cpp lexer.cpp grammar.cpp util.cpp item.cpp
+SRCS=token.cpp lexer.cpp grammar.cpp util.cpp item.cpp state.cpp
 OBJS=$(subst .cpp,.o, $(SRCS))
-
-TESTS=$(subst .cpp,_test.cpp, $(SRCS))
-TEST_EXECS=$(subst .cpp,, $(TESTS))
+TESTS=$(subst .cpp,_test, $(SRCS))
 
 all: $(EXEC)
 
 $(EXEC): $(OBJS) main.o
 	$(LINK) $(EXEC) main.o $(OBJS)
 
-test: spotless $(OBJS) $(TEST_EXECS)
+test: spotless $(OBJS) $(TESTS)
 
 %_test: %_test.o
 	$(LINK) $@ $< $(OBJS)

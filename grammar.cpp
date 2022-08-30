@@ -18,7 +18,8 @@ int Grammar::tokenSymbol(Token* t) {
 /*the first symbol of the grammar (i.e symbol with value 1)
   is implicitly defined as the start symbol)*/
 void Grammar::augmentStart() {
-  Nonterminal* nt = new Nonterminal( serialize("AUGMENTED_START"));
+  symbols["AUGMENTED_START"] = -1;
+  Nonterminal* nt = new Nonterminal(AUGMENTED_START);
   std::vector<int> production { 1 };
   nt->productions.push_back(production); 
   nonterminals[nt->head] = nt;
