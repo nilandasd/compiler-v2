@@ -15,9 +15,16 @@ STMT
 	| EXPR ;
 	| VAR ID TYPE ;
 	| ID = EXPR ;
+	| ID [ EXPR ] = EXPR ;
+	| EXPR ;
+	| TYPE ID ( PARAMS ) BLOCK
+	| RETURN EXPR ;
+	| CLASS ID CLASSBLOCK
 
 EXPR
 	| ( EXPR )
+	| EXPR && EXPR
+	| EXPR || EXPR
 	| EXPR == EXPR
 	| EXPR != EXPR
 	| EXPR >= EXPR
@@ -30,6 +37,37 @@ EXPR
 	| EXPR -  EXPR
 	| ID
 	| NUM
+	| ID ( EXPRS )
+	| ID [ EXPR ]
+
+CBLOCK
+	|  { CLASSSTMTS } 
+
+CSTMTS
+	| CLASSSTMTS CLASSSTMT
+	| CLASSSTMT
+
+CSTMT
+	| PUBLIC :
+	| PRIVATE :
+	| VAR ID TYPE ;
+	| TYPE ID ( PARAMS ) BLOCK ;
 
 TYPE
+	| TYPE *
 	| INT
+	| LONG
+	| FLOAT
+	| CHAR
+	| BOOL
+	| UINT
+	| ULONG
+	| ARRAY < TYPE >
+
+PARAMS
+	| PARAMS , ID EXPR
+	| ID EXPR
+
+EXPRS
+	| EXPRS , EXPR
+	| EXPR

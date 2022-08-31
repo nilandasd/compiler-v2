@@ -17,20 +17,20 @@ int Item::expects() {
   return DNE;
 }
 
-Item Item::shiftCursor() {
+Item* Item::shiftCursor() {
   std::vector<int> b;
-  Item i(head, b, lookahead);
+  Item *i = new Item(head, b, lookahead);
 
   bool flag = false;
   for (int k : body) {
     if (flag == false && k != CURSOR) {
-      i.body.push_back(k);
+      i->body.push_back(k);
     } else if (k == CURSOR) {
       flag = true;
     } else {
       flag = false;
-      i.body.push_back(k);
-      i.body.push_back(CURSOR);
+      i->body.push_back(k);
+      i->body.push_back(CURSOR);
     }
   }
 

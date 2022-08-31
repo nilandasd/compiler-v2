@@ -15,7 +15,7 @@ void test_read1() {
   
   G.read();
 
-  assert(G.symbols.size() == 4);
+  assert(G.symbols.size() == 5);
   assert(G.nonterminals.size() == 1);
   assert(G.symbols["START"] == 1);
   assert(G.symbols["w1"] == 2);
@@ -40,7 +40,7 @@ void test_read2() {
   
   G.read();
   
-  assert(G.symbols.size() == 6);
+  assert(G.symbols.size() == 7);
   assert(G.nonterminals.size() == 1);
   assert(G.symbols["START"] == 1);
   assert(G.symbols["w1"] == 2);
@@ -71,7 +71,7 @@ void test_read3() {
 
   G.read();
 
-  assert(G.symbols.size() == 4);
+  assert(G.symbols.size() == 5);
   assert(G.nonterminals.size() == 2);
   assert(G.symbols["START"] == 1);
   assert(G.symbols["w1"] == 2);
@@ -195,11 +195,27 @@ void test_augmentStart() {
   G.read();
   G.augmentStart();
 
-  assert(G.symbols.size() == 5);
+  assert(G.symbols.size() == 6);
   assert(G.nonterminals.size() == 3);
   assert(G.symbols["AUGMENTED_START"] == -1);
 }
 
+void test_production_items() {
+  std::stringstream ss;
+  Grammar G(&ss);
+  ss << "START\n\t| w1\n\nNT\n\t| w2\n\t| w3";
+  G.read();
+
+  std::vector<Item*> productionItems = G.productionItems(G.serialize("NT"));
+
+  assert(productionItems.size() == 2);
+  assert(productionItems[0]->body[0] == CURSOR);
+  assert(productionItems[0]->body[1] == G.serialize("w2"));
+  assert(productionItems[0]->head == G.serialize("NT"));
+  assert(productionItems[1]->body[0] == CURSOR);
+  assert(productionItems[1]->body[1] == G.serialize("w3"));
+  assert(productionItems[1]->head == G.serialize("NT"));
+}
 
 int main() {
   test_read1();
@@ -210,4 +226,5 @@ int main() {
   test_invalid_production();
   test_first();
   test_augmentStart();
+  test_production_items();
 }

@@ -1,16 +1,22 @@
 # compiler-v2
 
-LEXER:
-
-finish state.cpp
-finish slr.cpp
+CHAPTER 4
 finish lalr.cpp
+  init
+  closure
+  move
 
-make lexer recognize strings
+propagationTable.cpp
+  init
+
+actionTable.cpp
 
 make lexer recognize longs and floats
 
 reserve 'string'
+
+
+YAYYY TAKE A BREAK!
 
 start chapter 5
 

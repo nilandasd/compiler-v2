@@ -16,7 +16,7 @@ class Item {
     int lookahead;
 
     int expects();
-    Item shiftCursor();
+    Item* shiftCursor();
     std::vector<int> postfix();
 
     bool operator==(const Item& i);

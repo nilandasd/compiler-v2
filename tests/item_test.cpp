@@ -66,18 +66,18 @@ void test_shiftCursor() {
   Item i4(0, v4, DNE);
   
 
-  Item r = i1.shiftCursor();
-  assert(r.body[1] == CURSOR);
-  assert(r == i2);
-  r = r.shiftCursor();
-  assert(r.body[2] == CURSOR);
-  assert(r == i3);
-  r = r.shiftCursor();
-  assert(r.body[3] == CURSOR);
-  assert(r == i4);
+  Item *r = i1.shiftCursor();
+  assert(r->body[1] == CURSOR);
+  assert(*r == i2);
+  r = r->shiftCursor();
+  assert(r->body[2] == CURSOR);
+  assert(*r == i3);
+  r = r->shiftCursor();
+  assert(r->body[3] == CURSOR);
+  assert(*r == i4);
 
   try {
-    r = r.shiftCursor();
+    r = r->shiftCursor();
     assert(false);
   } catch(std::runtime_error &e) {
     std::string s(e.what());

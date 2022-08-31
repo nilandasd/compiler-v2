@@ -3,11 +3,13 @@
 #include "grammar.hpp"
 #include "util.hpp"
 #include "token.hpp"
+#include "item.hpp"
 #include <vector>
 #include <string>
 #include <sstream>
 #include <stdexcept>
 #include <iostream>
+#include <string>
 #include <set>
 
 
@@ -118,4 +120,26 @@ int Grammar::serialize(std::string s) {
   symbolCounter++;
   symbols[s] = symbolCounter;
   return symbolCounter;
+}
+
+std::vector<Item*> Grammar::productionItems(int i) {
+  std::vector<Item*> result;
+  if (nonterminals.find(i) == nonterminals.end()) return result;
+
+  for (auto production : nonterminals[i]->productions) {
+    std::vector<int> body = { CURSOR };
+    body.insert(body.end(), production.begin(), production.end());
+    Item *newItem = new Item(i, body, DNE);
+    result.push_back(newItem);
+  }
+
+  return result;
+}
+
+std::string Grammar::symbolToString(int x) {
+  for (auto i : symbols) {
+    if (i.second == x) return i.first;
+  }
+
+  return "SYMBOL NOT FOUND";
 }
