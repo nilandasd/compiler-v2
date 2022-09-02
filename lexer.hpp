@@ -3,6 +3,7 @@
 #pragma once
 
 #include "token.hpp"
+#include <ctype.h>
 #include <deque>
 #include <sstream>
 

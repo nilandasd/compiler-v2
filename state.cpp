@@ -1,11 +1,6 @@
 // state.cpp
 
 #include "state.hpp"
-#include "item.hpp"
-#include "grammar.hpp"
-#include <vector>
-#include <unordered_map>
-#include <iostream>
 
 using vec_size = std::vector<Item*>::size_type;
 

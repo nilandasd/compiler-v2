@@ -1,16 +1,6 @@
 // grammar.cpp
 
 #include "grammar.hpp"
-#include "util.hpp"
-#include "token.hpp"
-#include "item.hpp"
-#include <vector>
-#include <string>
-#include <sstream>
-#include <stdexcept>
-#include <iostream>
-#include <string>
-#include <set>
 
 
 int Grammar::tokenSymbol(Token* t) {

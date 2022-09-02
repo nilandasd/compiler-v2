@@ -2,13 +2,10 @@
 
 #pragma once
 
-#include <vector>
-#include <string>
-#include <unordered_map>
 #include "token.hpp"
 #include "item.hpp"
-
-#define AUGMENTED_START -1
+#include <sstream>
+#include <set>
 
 class Nonterminal {
   public:
@@ -24,7 +21,7 @@ class Grammar {
     std::unordered_map<int, Nonterminal*> nonterminals;
 
     Grammar(std::stringstream* s): ss{s} {
-        symbols["."] = CURSOR; 
+      symbols["."] = CURSOR; 
     };
 
     void read();

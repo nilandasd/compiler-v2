@@ -1,10 +1,8 @@
 //  main.cpp
 
-#include <iostream>
 #include "token.hpp"
 #include "lexer.hpp"
 #include "grammar.hpp"
-#include <sstream>
 
 int main() {
   std::stringstream ss;

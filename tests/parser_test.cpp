@@ -1,13 +1,12 @@
 // slr_test.cpp
 
-#include <cassert>
-#include "../grammar.hpp"
-#include "../slr.hpp"
-#include <sstream>
-#include <iostream>
-#include <fstream>
 
-void test_init1() {
+#include "../parser.hpp"
+#include <fstream>
+#include <cassert>
+
+
+void test_SLR1() {
   std::stringstream ss;
   ss << "START\n\t| w1 w2 w3";
   Grammar G(&ss);  
@@ -25,7 +24,7 @@ void test_init1() {
   assert(slr.states[0]->items[0]->body[1] == 1);
 }
 
-void test_init2() {
+void test_SLR2() {
   std::stringstream ss;
   ss << "START\n\t| NT w2 w3\n\nNT\n\t| w4";
   Grammar G(&ss);  
@@ -49,7 +48,7 @@ void test_init2() {
   }
 }
 
-void test_init3() {
+void test_SLR3() {
   std::stringstream ss;
   ss << "START\n\t| NT w2 w3\n\nNT\n\t| w4";
   Grammar G(&ss);  
@@ -62,7 +61,7 @@ void test_init3() {
 }
 
 int main() {
-  test_init1();
-  test_init2();
-  test_init3();
+  test_SLR1();
+  test_SLR2();
+  test_SLR3();
 }

@@ -1,11 +1,6 @@
 //token.cpp
 
 #include "token.hpp"
-#include "util.hpp"
-#include <iostream>
-#include <string>
-#include <unordered_map>
-
 
 std::unordered_map<std::string, int> specialTokens ({
   { "==", EQ   },

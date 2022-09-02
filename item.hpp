@@ -3,9 +3,12 @@
 #pragma once
 
 #include <vector>
+#include <stdexcept>
 
 #define DNE -1
 #define CURSOR -2
+#define ACCEPT -3
+#define AUGMENTED_START -4
 
 class Item {
   public:
@@ -18,6 +21,7 @@ class Item {
     int expects();
     Item* shiftCursor();
     std::vector<int> postfix();
+    bool in(std::vector<Item*> items);
 
     bool operator==(const Item& i);
     bool operator!=(const Item& i);

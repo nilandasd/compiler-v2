@@ -1,8 +1,7 @@
 // item.cpp
 
 #include "item.hpp"
-#include <vector>
-#include <stdexcept>
+
 
 int Item::expects() {
   bool flag = false;
@@ -42,10 +41,11 @@ Item* Item::shiftCursor() {
 std::vector<int> Item::postfix() {
   std::vector<int> result;
 
-  bool flag = false;
+  int flag = -1;
   for (int i : body) {
-    if (flag) result.push_back(i);
-    if (i == CURSOR) flag = true;
+    if (flag == 1) result.push_back(i);
+    else if (flag == 0) flag = 1;
+    else if (i == CURSOR) flag = 0;
   }
 
   return result;
@@ -66,4 +66,15 @@ bool Item::operator==(const Item& other) {
 
 bool Item::operator!=(const Item& other) {
   return !(*this == other);
+}
+
+bool Item::in(std::vector<Item*> items) {
+  bool flag = false;
+  for (auto k : items) {
+    if (*this == *k) {
+      flag = true;
+      break;
+    }
+  }
+  return flag;
 }

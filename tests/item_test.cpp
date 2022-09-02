@@ -42,13 +42,12 @@ void test_postfix() {
   Item i3(0, v3, DNE);
 
   std::vector<int> r = i1.postfix();
-  assert(r.size() == 5);
-  assert(r[0] == 1);
-  assert(r[4] == 5);
+  assert(r.size() == 4);
+  assert(r[0] == 2);
+  assert(r[3] == 5);
 
   r = i2.postfix();
-  assert(r.size() == 1);
-  assert(r[0] == 3);
+  assert(r.size() == 0);
   
   r = i3.postfix();
   assert(r.size() == 0);
@@ -85,9 +84,27 @@ void test_shiftCursor() {
   }
 }
 
+void test_in() {
+  std::vector<int> v1{CURSOR, 1, 2, 3};
+  std::vector<int> v2{1, CURSOR, 2, 3};
+  std::vector<int> v3{1, 2, CURSOR, 3};
+  std::vector<int> v4{1, 2, 3, CURSOR};
+  
+  Item i1(0, v1, DNE);
+  Item i2(0, v2, DNE);
+  Item i3(0, v3, DNE);
+  Item i4(0, v4, DNE);
+  Item i5(0, v4, DNE);
+  
+  std::vector<Item*> items {&i1, &i2, &i3};
+  assert(!i4.in(items));
+  assert(i3.in(items));
+}
+
 int main() {
   test_comparison();
   test_expects();
   test_postfix();
   test_shiftCursor();
+  test_in();
 }
