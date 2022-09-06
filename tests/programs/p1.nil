@@ -1,0 +1,6 @@
+
+var helloWorld int;
+
+helloWorld = 42;
+
+helloWorld + helloWorld;

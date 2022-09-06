@@ -9,7 +9,7 @@ std::unordered_map<std::string, int> specialTokens ({
   { "<=", LTE  },
   { "||", OR   },
   { "&&", AND  },
-  { "$" , END  }
+  { "ACCEPT" , END  }
 });
 
 std::unordered_map<std::string, int> reservedWords ({
@@ -20,7 +20,9 @@ std::unordered_map<std::string, int> reservedWords ({
   { "var",    VAR    },
   { "return", RETURN },
   { "int",    INT    },
-  { "long",   LONG   }
+  { "long",   LONG   },
+  { "void",   VOID   },
+  { "array",  ARRAY  }
 });
 
 std::string Token::toString() {

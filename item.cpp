@@ -78,3 +78,14 @@ bool Item::in(std::vector<Item*> items) {
   }
   return flag;
 }
+
+std::vector<int> Item::production() {
+  std::vector<int> result;
+
+  for (int i : body) {
+    if (i == CURSOR) continue;
+    result.push_back(i);
+  }
+
+  return result;
+}

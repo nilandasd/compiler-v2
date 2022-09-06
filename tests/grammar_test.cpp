@@ -22,7 +22,7 @@ void test_read1() {
   assert(G.symbols["w2"] == 3);
   assert(G.symbols["w3"] == 4);
 
-  Nonterminal* nt = G.nonterminals[G.symbols["START"]];
+  Nonterminal* nt = G.getNonterminal(G.symbols["START"]);
 
   assert(nt->head == G.symbols["START"]);
   assert(nt->productions.size() == 1);
@@ -49,7 +49,7 @@ void test_read2() {
   assert(G.symbols["w4"] == 5);
   assert(G.symbols["w5"] == 6);
   
-  Nonterminal* nt = G.nonterminals[G.symbols["START"]];
+  Nonterminal* nt = G.getNonterminal(G.symbols["START"]);
   
   assert(nt->head == G.symbols["START"]);
   assert(nt->productions.size() == 2);
@@ -78,7 +78,7 @@ void test_read3() {
   assert(G.symbols["NT"] == 3);
   assert(G.symbols["w2"] == 4);
 
-  Nonterminal* nt = G.nonterminals[G.symbols["START"]];
+  Nonterminal* nt = G.getNonterminal(G.symbols["START"]);
 
   assert(nt->head == G.symbols["START"]);
   assert(nt->productions.size() == 1);
@@ -86,7 +86,7 @@ void test_read3() {
   assert(nt->productions[0][0] == G.symbols["w1"]);
   
   delete nt;
-  nt = G.nonterminals[G.symbols["NT"]];
+  nt = G.getNonterminal(G.symbols["NT"]);
 
   assert(nt->head == G.symbols["NT"]);
   assert(nt->productions.size() == 1);

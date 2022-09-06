@@ -1,26 +1,37 @@
 //  main.cpp
 
-#include "token.hpp"
 #include "lexer.hpp"
-#include "grammar.hpp"
+#include "parser.hpp"
+#include <fstream>
 
 int main() {
-  std::stringstream ss;
-  ss << "testng 1 2 3 ! :)";
-  Lexer lex(&ss);
-  lex.analyze();
 
-  Token* t = lex.getToken();
-
-  IdToken* i = (IdToken*)t;
-  std::cout << t->toString() << std::endl;
-  std::cout << i->attr << std::endl;
+    std::ifstream file1( "./grammar.txt");
+    std::stringstream ss1;
+    ss1 << file1.rdbuf();
+    file1.close();
+    Grammar G(&ss1);  
+    G.read();
+    G.augmentStart();
   
-  std::stringstream sss;
-  Grammar grammar(&sss);
+    LALR lalr(G);
+    lalr.init();
+    lalr.print();
 
-  sss << "START\n\t| this is a test\n\t| did it work?";
-  grammar.read();
+    std::ifstream file2( "./tests/programs/p2.nil");
+    std::stringstream ss2;
+    ss2 << file2.rdbuf();
+    file2.close();
+    Lexer lexer(&ss2);
+    lexer.analyze();
 
-  return 0;
+    std::vector<int> symbols;
+    while(true) {
+      Token* token = lexer.getToken();
+      if (token == NULL) break;
+      token->toString();
+      symbols.push_back(G.tokenSymbol(token));
+    }
+
+    lalr.parse(symbols);
 }

@@ -26,6 +26,11 @@
 #define VAR    -15
 #define INT    -16
 #define LONG   -17
+#define CHAR   -18
+#define BOOL   -19
+#define ARRAY  -20
+#define FLOAT  -21
+#define VOID   -22
 
 /*
 All other tokens that are neither of type ID, NUM, Reservered Words, 

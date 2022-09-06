@@ -22,10 +22,12 @@ void Lexer::analyze() {
       std::string s;
       s += c;
       s += ss->peek();
-      if ( specialTokens.find(s) == specialTokens.end() ) return;
-      Token* t = new Token(specialTokens[s]);
-      tokens.push_back(t);
-      continue;
+      if ( specialTokens.find(s) != specialTokens.end() ) {
+        Token* t = new Token(specialTokens[s]);
+        tokens.push_back(t);
+        ss->get(c);
+        continue;
+      }
     }
 
     Token* t = new Token((int)c);

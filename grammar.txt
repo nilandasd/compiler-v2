@@ -46,14 +46,15 @@ TYPE
 	| FLOAT
 	| CHAR
 	| BOOL
-	| UINT
-	| ULONG
+	| VOID
 	| ARRAY < TYPE >
 
 PARAMS
 	| PARAMS , ID EXPR
 	| ID EXPR
+	| VOID
 
 EXPRS
 	| EXPRS , EXPR
 	| EXPR
+	| VOID

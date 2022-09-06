@@ -4,6 +4,7 @@
 
 
 int Grammar::tokenSymbol(Token* t) {
+  std::cout << t->toString() << std::endl;
   return serialize(t->toString());
 }
 
@@ -14,7 +15,7 @@ void Grammar::augmentStart() {
   Nonterminal* nt = new Nonterminal(AUGMENTED_START);
   std::vector<int> production { 1 };
   nt->productions.push_back(production); 
-  nonterminals[nt->head] = nt;
+  nonterminals.push_back(nt);
 }
 
 
@@ -23,19 +24,19 @@ void Grammar::augmentStart() {
 std::vector<int> Grammar::first(int i) {
   std::set<int> s; 
 
-  if (nonterminals.find(i) == nonterminals.end()) {
+  if (!nonterminalExists(i)) {
     s.insert(i);
     std::vector v( s.begin(), s.end() );
     return v;
   }
-  Nonterminal *nt = nonterminals[i];
+  Nonterminal *nt = getNonterminal(i);
  
-  for ( auto &production : nt->productions ) {
+  for (auto production : nt->productions) {
     int k = production[0];
 
-    if ( nt->head == k ) continue;
+    if (nt->head == k) continue;
 
-    if(nonterminals.find(k) == nonterminals.end()) {
+    if(!nonterminalExists(i)) {
       s.insert(k);
     } else {
       for (auto j : Grammar::first(k)) {
@@ -68,7 +69,7 @@ void Grammar::readNonterminal(std::string head) {
 
   readProductions(nt);
 
-  nonterminals[nt->head] = nt;
+  nonterminals.push_back(nt);
 }
 
 void Grammar::readProductions(Nonterminal* nt) {
@@ -114,9 +115,9 @@ int Grammar::serialize(std::string s) {
 
 std::vector<Item*> Grammar::productionItems(int i) {
   std::vector<Item*> result;
-  if (nonterminals.find(i) == nonterminals.end()) return result;
+  if (!nonterminalExists(i)) return result;
 
-  for (auto production : nonterminals[i]->productions) {
+  for (auto production : getNonterminal(i)->productions) {
     std::vector<int> body = { CURSOR };
     body.insert(body.end(), production.begin(), production.end());
     Item *newItem = new Item(i, body, DNE);
@@ -127,9 +128,70 @@ std::vector<Item*> Grammar::productionItems(int i) {
 }
 
 std::string Grammar::symbolToString(int x) {
+  if (x == AUGMENTED_START) return "AUGMENTED_START";
+  if (x == DNE) return "DNE";
+  if (x == ACCEPT) return "ACCEPT";
+
   for (auto i : symbols) {
     if (i.second == x) return i.first;
   }
 
   return "SYMBOL NOT FOUND";
+}
+
+bool Grammar::productionPrecedes(Item* a, Item* b) {
+  if (b->head != a->head) {
+    for (auto nt : nonterminals) {
+      if (nt->head == a->head) break;
+      if (nt->head == b->head) return false;
+    }
+  } else { // this doesnt work really work
+    std::vector<int> aa = a->production();
+    std::vector<int> bb = b->production();
+    for (auto production : getNonterminal(a->head)->productions) {
+      if (aa == production) break;
+      if (bb == production) return false;
+    }
+  }
+
+  return true;
+}
+
+int Grammar::productionNumber(Item* item) {
+  int i = 0;
+  std::vector<int> body = item->production();
+  for (auto nt : nonterminals) {
+    for (auto production : nt->productions) {
+      if ( nt->head == item->head && production == body) return i;
+      i++;
+    }
+  }
+
+ throw std::runtime_error("production not found"); 
+}
+
+bool Grammar::nonterminalExists(int i) {
+  for(auto nt : nonterminals) {
+    if (i == nt->head) return true;
+  }
+  return false;
+}
+
+Nonterminal* Grammar::getNonterminal(int i) {
+  for(auto nt : nonterminals) {
+    if (i == nt->head) return nt;
+  }
+  return NULL;
+}
+
+std::pair<int, std::vector<int>> Grammar::getProduction(int pid) {
+  std::pair<int, std::vector<int>> result;
+  int i = 0;
+  for (auto nt : nonterminals) {
+    for (auto production : nt->productions) {
+      if ( i == pid) return {nt->head, production};
+      i++;
+    }
+  }
+  throw std::runtime_error("production not found"); 
 }
