@@ -15,7 +15,7 @@ void test_read1() {
   
   G.read();
 
-  assert(G.symbols.size() == 5);
+  assert(G.symbols.size() == 6);
   assert(G.nonterminals.size() == 1);
   assert(G.symbols["START"] == 1);
   assert(G.symbols["w1"] == 2);
@@ -40,7 +40,7 @@ void test_read2() {
   
   G.read();
   
-  assert(G.symbols.size() == 7);
+  assert(G.symbols.size() == 8);
   assert(G.nonterminals.size() == 1);
   assert(G.symbols["START"] == 1);
   assert(G.symbols["w1"] == 2);
@@ -71,7 +71,7 @@ void test_read3() {
 
   G.read();
 
-  assert(G.symbols.size() == 5);
+  assert(G.symbols.size() == 6);
   assert(G.nonterminals.size() == 2);
   assert(G.symbols["START"] == 1);
   assert(G.symbols["w1"] == 2);
@@ -195,7 +195,7 @@ void test_augmentStart() {
   G.read();
   G.augmentStart();
 
-  assert(G.symbols.size() == 6);
+  assert(G.symbols.size() == 7);
   assert(G.nonterminals.size() == 3);
   assert(G.symbols["AUGMENTED_START"] == -1);
 }

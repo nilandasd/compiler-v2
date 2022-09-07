@@ -33,7 +33,7 @@ void test_analyze1() {
   assert(t6->id == VAR);
   assert(t6->toString().compare("VAR") == 0);
   assert(t7->id == END);
-  assert(t7->toString().compare("$") == 0);
+  assert(t7->toString().compare("ACCEPT") == 0);
 }
 
 void test_analyze2() {

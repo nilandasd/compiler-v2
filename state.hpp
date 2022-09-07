@@ -7,6 +7,11 @@
 class State {
   public:
     State(int i): id(i) {};
+    ~State() {
+      for(auto item : items) {
+        delete item;
+      }
+    };
 
     int id;
     std::vector<Item*> items;

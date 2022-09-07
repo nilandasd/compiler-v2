@@ -51,6 +51,7 @@ class LALR: public Parser  {
     void propagateLookaheads(std::unordered_map<int, State*> kernel);
     void copySLR(SLR &slr);
     void createParsingTable();
+    void destroyPropagationTable();
 
     std::vector<propagator> propagationTable;
     std::vector<int> stack;

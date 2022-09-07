@@ -4,7 +4,6 @@
 
 
 int Grammar::tokenSymbol(Token* t) {
-  std::cout << t->toString() << std::endl;
   return serialize(t->toString());
 }
 

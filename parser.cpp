@@ -78,6 +78,9 @@ void SLR::init() {
         states[newState->id] = newState;
         additions = true;
       }
+      for (auto item : items) {
+        delete item;
+      }
     }
   }
 }
@@ -93,8 +96,9 @@ State* SLR::initialState() {
 std::vector<Item *> SLR::closure(std::vector<Item*> items) {
   std::vector<Item *> result;
 
-  for (auto item : items) {
-    result.push_back(item);
+  for (auto i : items) {
+    Item *newItem = new Item(i->head, i->body, i->lookahead);
+    result.push_back(newItem);
   }
 
   bool addition = true;
@@ -124,9 +128,8 @@ std::vector<Item *> SLR::closure(std::vector<Item*> items) {
 }
 
 // CLASS LALR
-// LA => Look Ahead ()
+// LA => Look Ahead
 // this is the parser that is actually used to parse the grammar
-
 void LALR::init() {
   SLR slr(G);
   slr.init();
@@ -140,8 +143,9 @@ void LALR::init() {
 std::vector<Item*> LALR::closure(std::vector<Item*> items) {
   std::vector<Item*> result;
 
-  for (auto item : items) {
-    result.push_back(item);
+  for (auto i : items) {
+    Item *newItem = new Item(i->head, i->body, i->lookahead);
+    result.push_back(newItem);
   }
 
   bool addition = true;
@@ -166,6 +170,7 @@ std::vector<Item*> LALR::closure(std::vector<Item*> items) {
           result.push_back(newItem);
           addition = true;
         }
+        delete prodItem;
       }
     }
   }
@@ -194,6 +199,9 @@ void LALR::initPropagationTable (std::unordered_map<int, State*> kernel) {
           addPropagation({state->id, item}, {state->moves[e]->id, newItem});
         }
       }
+      for (Item* i : J) {
+        delete i;
+      }
     }
   }
 }
@@ -211,6 +219,19 @@ void LALR::propagateLookaheads(std::unordered_map<int, State*> kernel) {
         }
       }
     }
+  }
+
+  destroyPropagationTable();
+}
+
+void LALR::destroyPropagationTable() {
+  while (propagationTable.size() != 0) {
+    propagator p = propagationTable.back();
+    propagationTable.pop_back();
+    for (auto iid : *p.second) {
+      delete iid.second;
+    }
+    delete p.second;
   }
 }
 
@@ -274,7 +295,8 @@ void LALR::createParsingTable() {
       }
     }
 
-    for (Item* item : closure(state->items)) {
+    std::vector<Item*> items = closure(state->items);
+    for (Item* item : items) {
       int e = item->expects();
       if (e != DNE && (!G.nonterminalExists(e)) && (state->moves.find(e) != state->moves.end())) {
         actionTable[state->id][e] = { SHIFT, state->moves[e]->id };
@@ -282,18 +304,19 @@ void LALR::createParsingTable() {
       } else if (e == DNE && item->head != AUGMENTED_START){
         int la = item->lookahead;
         if (actionTable[state->id].find(la) != actionTable[state->id].end()) {
-          if (actionTable[state->id][la].first == SHIFT) // RESOLVES SHIFT / REDUCE CONFLICTS
+          if (actionTable[state->id][la].first == SHIFT || // RESOLVES SHIFT / REDUCE CONFLICTS
+             !G.productionPrecedes(item, reduceReduceConflicts[e])) // RESOLVES REDUCE / REDUCE CONFLICTS
             continue;
-
-          if (!G.productionPrecedes(item, reduceReduceConflicts[e])) // RESOLVES REDUCE / REDUCE CONFLICTS
-            continue;
-
+          
           reduceReduceConflicts[la] = item;
         }
         actionTable[state->id][la] = { REDUCE, G.productionNumber(item) };
       } else if (e == DNE && item->head == AUGMENTED_START){
         actionTable[state->id][ACCEPT] = { ACCEPT, DNE };
       }
+    }
+    for (Item* item : items) {
+      delete item;
     }
   }
 }
@@ -308,7 +331,7 @@ void LALR::printActionTable() {
       } else if (action.second.first == REDUCE) {
         std::cout << "REDUCE: " << action.second.second;
       } else {
-        std::cout << "ACCEPT!!!";
+        std::cout << "ACCEPT!";
       }
       std::cout << std::endl;
     }
@@ -326,30 +349,15 @@ void LALR::parse(std::vector <int> input) {
   stack.push_back(0);
   while(true) {
     int s = stack.back();
-    std::cout << "STACK: ";
-    for(auto i : stack) {
-      std::cout << i << ", ";
-    }
-    std::cout << "ACTION: " << G.symbolToString(a) << std::endl;
     if (actionTable[s].find(a) == actionTable[s].end()) throw std::runtime_error("parsing error"); 
     action act = actionTable[s][a];
-
     if (act.first == REDUCE) {
-      
-
       std::pair<int, std::vector<int>> production = G.getProduction(act.second);
-      std::cout << "reducing: " << G.symbolToString(production.first) << " => ";
-      for (auto g : production.second) {
-        std::cout << G.symbolToString(g) << ", ";
-      }
-      std::cout << std::endl;
       for (int i = 0; i < production.second.size(); i++) {
         stack.pop_back();
       }
-      std::cout << "Goto: " << moveTable[stack.back()][production.first] << std::endl;
       stack.push_back(moveTable[stack.back()][production.first]);
     } else if (act.first == SHIFT) {
-      std::cout << "shifting " << act.second << std::endl;
         stack.push_back(act.second);
         k++;
         a = input[k];
@@ -357,5 +365,4 @@ void LALR::parse(std::vector <int> input) {
       break;
     }
   }
-  std::cout << "grammar acepted!" << std::endl;
 }

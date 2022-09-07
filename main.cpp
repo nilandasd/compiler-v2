@@ -5,7 +5,6 @@
 #include <fstream>
 
 int main() {
-
     std::ifstream file1( "./grammar.txt");
     std::stringstream ss1;
     ss1 << file1.rdbuf();
@@ -16,7 +15,6 @@ int main() {
   
     LALR lalr(G);
     lalr.init();
-    lalr.print();
 
     std::ifstream file2( "./tests/programs/p2.nil");
     std::stringstream ss2;
@@ -29,9 +27,10 @@ int main() {
     while(true) {
       Token* token = lexer.getToken();
       if (token == NULL) break;
-      token->toString();
       symbols.push_back(G.tokenSymbol(token));
     }
 
     lalr.parse(symbols);
+
+    std::cout << "Grammar accepted! :)" << std::endl;
 }
