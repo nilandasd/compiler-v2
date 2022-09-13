@@ -21,12 +21,12 @@ STMT
 	| RETURN EXPR ;
 
 EXPR
-	| ( EXPR )
+	| ( EXPR ) 
 	| EXPR && EXPR
 	| EXPR || EXPR
 	| EXPR == EXPR
 	| EXPR != EXPR
-	| EXPR >= EXPR
+	| EXPR >= EXPR 
 	| EXPR >  EXPR
 	| EXPR <= EXPR
 	| EXPR <  EXPR
@@ -34,6 +34,7 @@ EXPR
 	| EXPR /  EXPR
 	| EXPR +  EXPR
 	| EXPR -  EXPR
+	| - EXPR
 	| ID
 	| NUM
 	| ID ( EXPRS )
@@ -58,3 +59,4 @@ EXPRS
 	| EXPRS , EXPR
 	| EXPR
 	| VOID
+

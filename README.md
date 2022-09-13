@@ -2,25 +2,14 @@
 
 CHAPTER 4
 
-add destructor methods for states!
-
-make lexer recognize longs, floats, and chars and negative numbers, also 'true' and 'false'
-
-add some tests!
-
-try parsing some programs!
-
-YAYYY TAKE A BREAK!
+YAYYY TAKE A BREAK! come back on ( September 12th ) reading is okay though
 
 add in error handling,
-Do lots of refactoring,
-try
+Do lots of refactoring
+make lexer recognize floats
+add some tests!
 
-interpreter or compiler ???
-
-interpreter is much easier!
-compiler you would probably learn a lot more...
-
+Start coding chapter 5 :)
 
 BENCHMARKING (creating the LALR(1) automaton from the grammar file 25 times)
 
