@@ -2,6 +2,7 @@
 
 
 #include "../parser.hpp"
+#include "../lexer.hpp"
 #include <fstream>
 #include <cassert>
 
@@ -171,8 +172,6 @@ void test_LALR_automaton() {
 
   LALR lalr(G);
   lalr.init();
-  //lalr.printActionTable();
-  //lalr.print();
   assert(lalr.states.size() == 10);
 
   // state 0
@@ -261,8 +260,7 @@ void test_LALR_automaton() {
   assert(*(lalr.states[9]) == s9);
 }
 
-
-void test_LALR_actionTable() {
+void test_LALR_init() {
   std::ifstream file( "./grammar.txt");
   if (!file) assert(false);
   std::stringstream ss;
@@ -274,27 +272,170 @@ void test_LALR_actionTable() {
 
   LALR lalr(G);
   lalr.init();
-  //lalr.print();
-  //lalr.printActionTable();
 }
-// void test_LALR() {
-//   std::ifstream file( "./grammar.txt");
-//   if (!file) assert(false);
-//   std::stringstream ss;
-//   ss << file.rdbuf();
-//   file.close();
-//   Grammar G(&ss);  
-//   G.read();
-//   G.augmentStart();
 
-//   LALR lalr(G);
-//   lalr.init();
-// }
+void test_parse1() {
+  std::ifstream file( "./tests/grammars/g2.txt");
+  if (!file) assert(false);
+  std::stringstream ss;
+  ss << file.rdbuf();
+  file.close();
+  Grammar G(&ss);  
+  G.read();
+  G.augmentStart();
+
+  LALR lalr(G);
+  lalr.init();
+
+  std::ifstream file2( "./tests/programs/g2/one.txt");
+  std::stringstream ss2;
+  ss2 << file2.rdbuf();
+  file2.close();
+  Lexer lexer(&ss2);
+  lexer.analyze();
+  std::vector<int> symbols;
+  while(true) {
+    Token* token = lexer.getToken();
+    if (token == NULL) break;
+    symbols.push_back(G.tokenSymbol(token));
+  }
+
+  lalr.parse(symbols);
+}
+
+void test_parse2() {
+  std::ifstream file( "./tests/grammars/g2.txt");
+  if (!file) assert(false);
+  std::stringstream ss;
+  ss << file.rdbuf();
+  file.close();
+  Grammar G(&ss);  
+  G.read();
+  G.augmentStart();
+
+  LALR lalr(G);
+  lalr.init();
+
+  std::ifstream file2( "./tests/programs/g2/two.txt");
+  std::stringstream ss2;
+  ss2 << file2.rdbuf();
+  file2.close();
+  Lexer lexer(&ss2);
+  lexer.analyze();
+  std::vector<int> symbols;
+  while(true) {
+    Token* token = lexer.getToken();
+    if (token == NULL) break;
+    symbols.push_back(G.tokenSymbol(token));
+  }
+
+  lalr.parse(symbols);
+}
+
+void test_parse3() {
+  std::ifstream file( "./tests/grammars/g2.txt");
+  if (!file) assert(false);
+  std::stringstream ss;
+  ss << file.rdbuf();
+  file.close();
+  Grammar G(&ss);  
+  G.read();
+  G.augmentStart();
+
+  LALR lalr(G);
+  lalr.init();
+
+  std::ifstream file2( "./tests/programs/g2/three.txt");
+  std::stringstream ss2;
+  ss2 << file2.rdbuf();
+  file2.close();
+  Lexer lexer(&ss2);
+  lexer.analyze();
+  std::vector<int> symbols;
+  while(true) {
+    Token* token = lexer.getToken();
+    if (token == NULL) break;
+    symbols.push_back(G.tokenSymbol(token));
+  }
+
+  try {
+    lalr.parse(symbols);
+    assert(false);
+  } catch(std::runtime_error &e) {
+    assert(true);
+  }
+}
+
+void test_parse4() {
+  std::ifstream file( "./tests/grammars/g1.txt");
+  if (!file) assert(false);
+  std::stringstream ss;
+  ss << file.rdbuf();
+  file.close();
+  Grammar G(&ss);  
+  G.read();
+  G.augmentStart();
+
+  LALR lalr(G);
+  lalr.init();
+
+  std::ifstream file2( "./tests/programs/g1/one.txt");
+  std::stringstream ss2;
+  ss2 << file2.rdbuf();
+  file2.close();
+  Lexer lexer(&ss2);
+  lexer.analyze();
+  std::vector<int> symbols;
+  while(true) {
+    Token* token = lexer.getToken();
+    if (token == NULL) break;
+    symbols.push_back(G.tokenSymbol(token));
+  }
+
+  lalr.parse(symbols);
+}
+
+void test_parse5() {
+  std::ifstream file( "./tests/grammars/g1.txt");
+  if (!file) assert(false);
+  std::stringstream ss;
+  ss << file.rdbuf();
+  file.close();
+  Grammar G(&ss);  
+  G.read();
+  G.augmentStart();
+
+  LALR lalr(G);
+  lalr.init();
+
+  std::ifstream file2( "./tests/programs/g1/two.txt");
+  std::stringstream ss2;
+  ss2 << file2.rdbuf();
+  file2.close();
+  Lexer lexer(&ss2);
+  lexer.analyze();
+  std::vector<int> symbols;
+  while(true) {
+    Token* token = lexer.getToken();
+    if (token == NULL) break;
+    symbols.push_back(G.tokenSymbol(token));
+  }
+
+  try {
+    lalr.parse(symbols);
+    assert(false);     
+  } catch(std::runtime_error &e) {
+    assert(true);
+  }
+}
 
 int main() {
   test_SLR();
-
   test_LALR_automaton();
-
-  test_LALR_actionTable();
+  test_LALR_init();
+  test_parse1();
+  test_parse2();
+  test_parse3();
+  test_parse4();
+  test_parse5();
 }

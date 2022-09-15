@@ -1,5 +1,5 @@
 EXEC = compiler
-G++ = g++-12 -std=c++17 -Wall
+G++ = g++ -std=c++17 -Wall
 BUILD = $(G++) -c
 LINK = $(G++) -o
 

@@ -8,11 +8,11 @@
 #include <set>
 
 using productionId = std::pair<int, int>;
+
 class Nonterminal {
   public:
     int head;
     std::vector<std::vector<int>> productions;
-
     Nonterminal(int x): head(x) {};
 };
 
@@ -20,12 +20,10 @@ class Grammar {
   public:
     std::unordered_map<std::string, int> symbols;
     std::vector<Nonterminal*> nonterminals;
-
     Grammar(std::stringstream* s): ss{s} {
       symbols["."] = CURSOR;
       symbols["ACCEPT"] = ACCEPT; 
     };
-
     void read();
     void augmentStart();
     int tokenSymbol(Token* t);
@@ -44,7 +42,6 @@ class Grammar {
     void readProductions(Nonterminal* nt);
     std::vector<int> parseProduction(std::string s);
     void validateProduction(std::string s);
-
     std::stringstream* ss;
     int symbolCounter = 0;
 };

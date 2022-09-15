@@ -134,9 +134,9 @@ void LALR::init() {
   SLR slr(G);
   slr.init();
   copySLR(slr);
-
+  initPropagationTable(slr.states);
   propagateLookaheads(slr.states);
-
+  destroyPropagationTable();
   createParsingTable();
 }
 
@@ -207,8 +207,6 @@ void LALR::initPropagationTable (std::unordered_map<int, State*> kernel) {
 }
 
 void LALR::propagateLookaheads(std::unordered_map<int, State*> kernel) {
-  initPropagationTable(kernel);
-
   bool addition = true;
   while(addition) {
     addition = false;
@@ -220,8 +218,6 @@ void LALR::propagateLookaheads(std::unordered_map<int, State*> kernel) {
       }
     }
   }
-
-  destroyPropagationTable();
 }
 
 void LALR::destroyPropagationTable() {
@@ -248,24 +244,20 @@ void LALR::addPropagation(itemId source, itemId target) {
 
 bool LALR::addLookahead(int sid, Item *i, int la) {
   Item *newItem = new Item(i->head, i->body, la);
-
   for ( auto item : states[sid]->items) {
     if (*item == *newItem) {
       delete newItem;
       return false;
     }
   }
-
   states[sid]->items.push_back(newItem);
   return true;
 }
 
 std::vector<int> LALR::findLookAheads(itemId source) {
-
   std::vector<int> result;
   for ( auto item : states[source.first]->items) {
     source.second->lookahead = item->lookahead;
-    
     if (*item == *source.second) {
       result.push_back(item->lookahead);
     }
@@ -347,17 +339,18 @@ void LALR::parse(std::vector <int> input) {
   int k = 0;
   int a = input[k]; // token
   stack.push_back(0);
+
   while(true) {
     int s = stack.back();
     if (actionTable[s].find(a) == actionTable[s].end()) throw std::runtime_error("parsing error"); 
     action act = actionTable[s][a];
-    if (act.first == REDUCE) {
+    if (act.first == REDUCE) {//create a Node with children set to the reduction body
       std::pair<int, std::vector<int>> production = G.getProduction(act.second);
-      for (int i = 0; i < production.second.size(); i++) {
+      for (vec_size i = 0; i < production.second.size(); i++) {
         stack.pop_back();
       }
       stack.push_back(moveTable[stack.back()][production.first]);
-    } else if (act.first == SHIFT) {
+    } else if (act.first == SHIFT) { //create a leaf Node and push it to the stack 
         stack.push_back(act.second);
         k++;
         a = input[k];
