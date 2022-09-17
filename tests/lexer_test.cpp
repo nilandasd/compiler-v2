@@ -1,4 +1,4 @@
-
+// lexer_test.cpp
 
 #include "../lexer.hpp"
 #include "../token.hpp"
@@ -7,7 +7,7 @@
 
 void test_analyze1() {
   std::stringstream ss;
-  ss << "if else while func return var";
+  ss << "if else while var print";
 
   Lexer lex(&ss);
   lex.analyze();
@@ -17,8 +17,6 @@ void test_analyze1() {
   Token* t3 = lex.getToken();
   Token* t4 = lex.getToken();
   Token* t5 = lex.getToken();
-  Token* t6 = lex.getToken();
-  Token* t7 = lex.getToken();
 
   assert(t1->id == IF);
   assert(t1->toString().compare("IF") == 0);
@@ -26,14 +24,10 @@ void test_analyze1() {
   assert(t2->toString().compare("ELSE") == 0);
   assert(t3->id == WHILE);
   assert(t3->toString().compare("WHILE") == 0);
-  assert(t4->id == FUNC);
-  assert(t4->toString().compare("FUNC") == 0);
-  assert(t5->id == RETURN);
-  assert(t5->toString().compare("RETURN") == 0);
-  assert(t6->id == VAR);
-  assert(t6->toString().compare("VAR") == 0);
-  assert(t7->id == END);
-  assert(t7->toString().compare("ACCEPT") == 0);
+  assert(t4->id == VAR);
+  assert(t4->toString().compare("VAR") == 0);
+  assert(t5->id == PRINT);
+  assert(t5->toString().compare("PRINT") == 0);
 }
 
 void test_analyze2() {
@@ -103,15 +97,10 @@ void test_analyze4() {
 
 void test_analyze5() {
   std::stringstream ss;
-  
   Lexer lex(&ss);
-
   Token* t = lex.getToken();
-
   assert(t == NULL);
 }
-
-
 
 int main() {
   test_analyze1();

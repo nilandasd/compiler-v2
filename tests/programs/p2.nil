@@ -1,28 +1,13 @@
-void test(void) {
-    var foobar int;
-    var test int;
+var a int = 0;
+var b int = 1;
+var c int;
 
-    test = 1;
-    
-    if ( test + test && (test || test) >= test) {
-      test = 2;
-    }
-    
-    foobar = 1;
-    if (foobar == 0) {
-      return 1234;
-    } else {
-      return 2345;
-    }
+while(1) {
+  while(c < 255) {
+    c = a + b;
+    b = a;
+    a = c;
+
+    print c;
+  }
 }
-
-
-var qux array<int>;
-
-qux[0] = 1234;
-
-qux[1] = 124;
-
-qux[2] = test(void);
-
-qux[3] = qux[2]; 

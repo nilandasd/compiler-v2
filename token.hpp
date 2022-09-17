@@ -31,6 +31,8 @@
 #define ARRAY  -20
 #define FLOAT  -21
 #define VOID   -22
+#define PRINT  -23
+#define FOR    -24
 
 /*
 All other tokens that are neither of type ID, NUM, Reservered Words, 

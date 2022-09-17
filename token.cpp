@@ -13,16 +13,14 @@ std::unordered_map<std::string, int> specialTokens ({
 });
 
 std::unordered_map<std::string, int> reservedWords ({
-  { "if",     IF     },
-  { "else",   ELSE   },
-  { "while",  WHILE  },
-  { "func",   FUNC   },
-  { "var",    VAR    },
-  { "return", RETURN },
-  { "int",    INT    },
-  { "long",   LONG   },
-  { "void",   VOID   },
-  { "array",  ARRAY  }
+  { "if"    ,   IF     },
+  { "else"  ,   ELSE   },
+  { "while" ,   WHILE  },
+  { "for"   ,   FOR    },
+  { "var"   ,   VAR    },
+  { "int"   ,   INT    },
+  { "float" ,   FLOAT  },
+  { "print" ,   PRINT  }
 });
 
 std::string Token::toString() {

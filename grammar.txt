@@ -5,20 +5,14 @@ STMTS
 	| STMTS STMT
 	| STMT
 
-BLOCK
-	| { STMTS }
-
 STMT
-	| IF ( EXPR ) BLOCK
-	| IF ( EXPR ) BLOCK ELSE BLOCK
-	| WHILE ( EXPR ) BLOCK
-	| EXPR ;
+	| { STMTS }
+	| IF ( EXPR ) STMT
+	| IF ( EXPR ) STMT ELSE STMT
+	| WHILE ( EXPR ) STMT
 	| VAR ID TYPE ;
 	| ID = EXPR ;
-	| ID [ EXPR ] = EXPR ;
-	| EXPR ;
-	| TYPE ID ( PARAMS ) BLOCK
-	| RETURN EXPR ;
+	| PRINT EXPR ;
 
 EXPR
 	| ( EXPR ) 
@@ -34,29 +28,10 @@ EXPR
 	| EXPR /  EXPR
 	| EXPR +  EXPR
 	| EXPR -  EXPR
-	| - EXPR
 	| ID
 	| NUM
-	| ID ( EXPRS )
-	| ID [ EXPR ]
 
 TYPE
-	| TYPE *
 	| INT
-	| LONG
 	| FLOAT
-	| CHAR
-	| BOOL
-	| VOID
-	| ARRAY < TYPE >
-
-PARAMS
-	| PARAMS , ID EXPR
-	| ID EXPR
-	| VOID
-
-EXPRS
-	| EXPRS , EXPR
-	| EXPR
-	| VOID
 
