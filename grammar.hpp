@@ -33,6 +33,7 @@ class Grammar {
     int serialize(std::string s);
     bool productionPrecedes(Item* a, Item* b);
     int productionNumber(Item* item);
+    int productionNumber(int nt, std::vector<int> body); 
     bool nonterminalExists(int i);
     Nonterminal* getNonterminal(int i);
     std::pair<int, std::vector<int>> getProduction(int pid);

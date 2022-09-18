@@ -32,9 +32,7 @@ std::vector<int> Grammar::first(int i) {
  
   for (auto production : nt->productions) {
     int k = production[0];
-
     if (nt->head == k) continue;
-
     if(!nonterminalExists(i)) {
       s.insert(k);
     } else {
@@ -53,21 +51,16 @@ void Grammar::read() {
 
   while (ss->getline(l, 256)) {
     std::string line(l);
-
     if (empty(line)) continue;
-
     if (!alpha(line))
       throw std::runtime_error("BAD GRAMMAR FILE: nonterminal can only be letters");
-
     readNonterminal(line);
   }
 }
 
 void Grammar::readNonterminal(std::string head) {
   Nonterminal* nt = new Nonterminal( serialize(head));
-
   readProductions(nt);
-
   nonterminals.push_back(nt);
 }
 
@@ -76,11 +69,8 @@ void Grammar::readProductions(Nonterminal* nt) {
 
   while (ss->getline(l, 256)) {
     std::string line(l);
-
     if (empty(line)) break;
-
     validateProduction(line);
-    
     std::vector<int> production = parseProduction(line);
     nt->productions.push_back(production);
   }
@@ -154,6 +144,20 @@ bool Grammar::productionPrecedes(Item* a, Item* b) {
   }
 
   return true;
+}
+
+int Grammar::productionNumber(int x, std::vector<int> body) {
+  for (auto nt: nonterminals) {
+    if (nt->head != x) continue;
+
+    int i = 0;
+    for (auto prod: nt->productions) {
+      if (prod == body) return i;
+      i++;
+    }
+    break;
+  }
+  throw std::runtime_error("production not found"); 
 }
 
 int Grammar::productionNumber(Item* item) {

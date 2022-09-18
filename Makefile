@@ -3,7 +3,7 @@ G++ = g++ -std=c++17 -Wall
 BUILD = $(G++) -c
 LINK = $(G++) -o
 
-SRCS=parser.cpp token.cpp lexer.cpp grammar.cpp util.cpp item.cpp state.cpp
+SRCS=ast.cpp parser.cpp token.cpp lexer.cpp grammar.cpp util.cpp item.cpp state.cpp
 OBJS=$(subst .cpp,.o, $(SRCS))
 TESTS=$(subst .cpp,_test, $(SRCS))
 
