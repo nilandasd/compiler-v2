@@ -4,11 +4,13 @@
 
 #include "grammar.hpp"
 #include "state.hpp"
+#include "ast.hpp"
 
 using vec_size = std::vector<Item *>::size_type;
 using itemId = std::pair<int, Item*>;
 using propagator = std::pair<itemId, std::vector<itemId>*>;
 using action = std::pair<int, int>;
+using stackVal = std::pair<int, Node*>;
 
 class Parser {
   public:
@@ -23,6 +25,7 @@ class Parser {
     State* stateAlreadyExists(State *state);
     Grammar &G;
 };
+
 class SLR: public Parser {
   public:
     SLR(Grammar &g): Parser(g) {};
@@ -38,9 +41,10 @@ class LALR: public Parser  {
     LALR(Grammar &g): Parser(g) {};
     virtual void init();
     void printActionTable();
-    void parse(std::vector <int> input);
+    void parse(std::vector <Token*> tokens, bool buildAST);
     std::unordered_map<int, std::unordered_map<int, action>> actionTable;
     std::unordered_map<int, std::unordered_map<int, int>> moveTable;
+    AST ast = AST(&G);
 
   private:
     virtual std::vector<Item*> closure(std::vector<Item*> items);
@@ -54,5 +58,5 @@ class LALR: public Parser  {
     void destroyPropagationTable();
 
     std::vector<propagator> propagationTable;
-    std::vector<int> stack;
+    std::vector<stackVal> stack;
 };

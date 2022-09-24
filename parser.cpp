@@ -335,26 +335,51 @@ void LALR::printActionTable() {
   }
 }
 
-void LALR::parse(std::vector <int> input) {
-  int k = 0;
-  int a = input[k]; // token
-  stack.push_back(0);
+void LALR::parse(std::vector <Token*> tokens, bool buildAST) {
+  int tokenCounter = 0;
+  Token* nextToken = tokens[tokenCounter]; // token
+  Node *root = new Node(ACCEPT);
+  stack.push_back({0, root});
 
   while(true) {
-    int s = stack.back();
-    if (actionTable[s].find(a) == actionTable[s].end()) throw std::runtime_error("parsing error"); 
-    action act = actionTable[s][a];
-    if (act.first == REDUCE) {//create a Node with children set to the reduction body
-      std::pair<int, std::vector<int>> production = G.getProduction(act.second);
+    stackVal currentStackVal = stack.back();
+    int currentState = currentStackVal.first;
+    int symbol = G.tokenSymbol(nextToken);
+
+    if (actionTable[currentState].find(symbol) == actionTable[currentState].end())
+      throw std::runtime_error("parsing error"); 
+
+    action actionEntry = actionTable[currentState][symbol];
+    int actionType = actionEntry.first;
+
+    if (actionType == REDUCE) {//create a Node with children set to the reduction body
+      int productionId = actionEntry.second; 
+      std::pair<int, std::vector<int>> production = G.getProduction(productionId);
+      int prodHead = production.first;
+      std::vector<Node*> children;
+      for (vec_size i = production.second.size(); i > 0; i--) {
+        Node* child = stack[stack.size() - i].second;
+        children.push_back(child);
+      }
       for (vec_size i = 0; i < production.second.size(); i++) {
         stack.pop_back();
       }
-      stack.push_back(moveTable[stack.back()][production.first]);
-    } else if (act.first == SHIFT) { //create a leaf Node and push it to the stack 
-        stack.push_back(act.second);
-        k++;
-        a = input[k];
-    } else {
+      Node* newNode;
+      int productionNumber = G.productionNumber(prodHead, productionId);
+      if (buildAST)
+        newNode = ast.createInnerNode(prodHead, children, productionNumber);
+      ast.root = newNode;
+      int newState = moveTable[stack.back().first][prodHead];
+      stack.push_back({newState, newNode});
+    } else if (actionType == SHIFT) { //create a leaf Node and push it to the stack 
+        int newState = actionEntry.second;
+        Node* newLeaf;        
+        if (buildAST)
+          newLeaf = ast.createLeafNode(symbol, nextToken);
+        stack.push_back({newState, newLeaf});
+        tokenCounter++;
+        nextToken = tokens[tokenCounter];
+    } else { //actionType == ACCEPT :)
       break;
     }
   }

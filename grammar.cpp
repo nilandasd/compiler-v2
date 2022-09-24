@@ -146,16 +146,16 @@ bool Grammar::productionPrecedes(Item* a, Item* b) {
   return true;
 }
 
-int Grammar::productionNumber(int x, std::vector<int> body) {
-  for (auto nt: nonterminals) {
-    if (nt->head != x) continue;
-
-    int i = 0;
-    for (auto prod: nt->productions) {
-      if (prod == body) return i;
+int Grammar::productionNumber(int nonterm, int pid) {
+  std::pair<int, std::vector<int>> result;
+  int i = 0;
+  int x = 0;
+  for (auto nt : nonterminals) {
+    for (auto production : nt->productions) {
+      if (i == pid) return x;
+      if (nt->head == nonterm) x++;
       i++;
     }
-    break;
   }
   throw std::runtime_error("production not found"); 
 }

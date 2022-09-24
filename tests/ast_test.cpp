@@ -34,7 +34,7 @@ void test_createNode() {
   children.push_back(l1);
   children.push_back(stmts);
   children.push_back(l2);
-  Node* node = ast.createInnerNode(G.serialize("STMT"), children);
+  Node* node = ast.createInnerNode(G.serialize("STMT"), children, 0);
   assert(node == stmts);
 }
 
@@ -59,12 +59,12 @@ void test_createNode2() {
   children.push_back(expr);
   children.push_back(l3);
   children.push_back(stmt);
-  Node* node = ast.createInnerNode(G.serialize("STMT"), children);
+  Node* node = ast.createInnerNode(G.serialize("STMT"), children, 3);
   assert(node->symbol == G.serialize("STMT"));
   assert(((Parent *)node)->children.size() == 2);
-  assert(expr->jump == 1);
-  assert(stmt->next == 0);
-  assert(stmt->end == 1);
+  assert(expr->jump == 2);
+  assert(stmt->next == 1);
+  assert(stmt->end == 2);
 }
 
 int main() {

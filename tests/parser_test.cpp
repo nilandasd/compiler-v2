@@ -293,14 +293,14 @@ void test_parse1() {
   file2.close();
   Lexer lexer(&ss2);
   lexer.analyze();
-  std::vector<int> symbols;
+  std::vector<Token*> tokens;
   while(true) {
-    Token* token = lexer.getToken();
+    Token *token = lexer.getToken();
     if (token == NULL) break;
-    symbols.push_back(G.tokenSymbol(token));
+    tokens.push_back(token);
   }
 
-  lalr.parse(symbols);
+  lalr.parse(tokens, false);
 }
 
 void test_parse2() {
@@ -322,14 +322,14 @@ void test_parse2() {
   file2.close();
   Lexer lexer(&ss2);
   lexer.analyze();
-  std::vector<int> symbols;
+  std::vector<Token*> tokens;
   while(true) {
-    Token* token = lexer.getToken();
+    Token *token = lexer.getToken();
     if (token == NULL) break;
-    symbols.push_back(G.tokenSymbol(token));
+    tokens.push_back(token);
   }
 
-  lalr.parse(symbols);
+  lalr.parse(tokens, false);
 }
 
 void test_parse3() {
@@ -351,15 +351,15 @@ void test_parse3() {
   file2.close();
   Lexer lexer(&ss2);
   lexer.analyze();
-  std::vector<int> symbols;
+  std::vector<Token*> tokens;
   while(true) {
-    Token* token = lexer.getToken();
+    Token *token = lexer.getToken();
     if (token == NULL) break;
-    symbols.push_back(G.tokenSymbol(token));
+    tokens.push_back(token);
   }
 
   try {
-    lalr.parse(symbols);
+    lalr.parse(tokens, false);
     assert(false);
   } catch(std::runtime_error &e) {
     assert(true);
@@ -385,14 +385,14 @@ void test_parse4() {
   file2.close();
   Lexer lexer(&ss2);
   lexer.analyze();
-  std::vector<int> symbols;
+  std::vector<Token*> tokens;
   while(true) {
-    Token* token = lexer.getToken();
+    Token *token = lexer.getToken();
     if (token == NULL) break;
-    symbols.push_back(G.tokenSymbol(token));
+    tokens.push_back(token);
   }
 
-  lalr.parse(symbols);
+  lalr.parse(tokens, false);
 }
 
 void test_parse5() {
@@ -414,19 +414,50 @@ void test_parse5() {
   file2.close();
   Lexer lexer(&ss2);
   lexer.analyze();
-  std::vector<int> symbols;
+  std::vector<Token*> tokens;
   while(true) {
-    Token* token = lexer.getToken();
+    Token *token = lexer.getToken();
     if (token == NULL) break;
-    symbols.push_back(G.tokenSymbol(token));
+    tokens.push_back(token);
   }
 
   try {
-    lalr.parse(symbols);
+    lalr.parse(tokens, false);
     assert(false);     
   } catch(std::runtime_error &e) {
     assert(true);
   }
+}
+
+void test_parse6() {
+  std::ifstream file( "grammar.txt");
+  if (!file) assert(false);
+  std::stringstream ss;
+  ss << file.rdbuf();
+  file.close();
+  Grammar G(&ss);  
+  G.read();
+  G.augmentStart();
+
+  LALR lalr(G);
+  lalr.init();
+
+  std::ifstream file2( "tests/programs/p4.nil");
+  std::stringstream ss2;
+  ss2 << file2.rdbuf();
+  file2.close();
+  Lexer lexer(&ss2);
+  lexer.analyze();
+  std::vector<Token*> tokens;
+  while(true) {
+    Token *token = lexer.getToken();
+    if (token == NULL) break;
+    tokens.push_back(token);
+  }
+
+  lalr.parse(tokens, true);
+  lalr.ast.printAST();
+  lalr.ast.traverse(lalr.ast.root);
 }
 
 int main() {
@@ -438,4 +469,5 @@ int main() {
   test_parse3();
   test_parse4();
   test_parse5();
+  test_parse6();
 }
