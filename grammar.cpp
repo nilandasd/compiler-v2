@@ -95,6 +95,9 @@ void Grammar::validateProduction(std::string line) {
 }
 
 int Grammar::serialize(std::string s) {
+  if (s == "ID") return ID;
+  if (s == "NUM") return NUM;
+
   if (symbols.find(s) != symbols.end()) return symbols[s];
 
   symbolCounter++;
@@ -120,6 +123,8 @@ std::string Grammar::symbolToString(int x) {
   if (x == AUGMENTED_START) return "AUGMENTED_START";
   if (x == DNE) return "DNE";
   if (x == ACCEPT) return "ACCEPT";
+  if (x == ID) return "ID";
+  if (x == NUM) return "NUM";
 
   for (auto i : symbols) {
     if (i.second == x) return i.first;

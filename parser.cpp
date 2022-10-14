@@ -338,8 +338,7 @@ void LALR::printActionTable() {
 void LALR::parse(std::vector <Token*> tokens, bool buildAST) {
   int tokenCounter = 0;
   Token* nextToken = tokens[tokenCounter]; // token
-  Node *root = new Node(ACCEPT);
-  stack.push_back({0, root});
+  stack.push_back({0, NULL});
 
   while(true) {
     stackVal currentStackVal = stack.back();

@@ -7,7 +7,7 @@ Node* AST::createInnerNode(int symbol, std::vector<Node*> nodes, int prodNum) {
     if (prodNum == 0) { // STMT => { STMTS }
       delete nodes[0];
       delete nodes[2];
-      nodes[1]->scope = newScope();
+      nodes[1]->newScope = true;
       return nodes[1];
 
     } else if (prodNum == 1) { // STMT => IF ( EXPR ) STMT
@@ -21,7 +21,7 @@ Node* AST::createInnerNode(int symbol, std::vector<Node*> nodes, int prodNum) {
         if (n == cond || stmt) children.push_back(n);
         else delete n;
       }
-      return new Parent(symbol, children);
+      return new Parent(symbol, prodNum, children);
 
     } else if (prodNum == 2) { // STMT => IF ( EXPR ) STMT ELSE STMT
       int L1 = newLabel();
@@ -38,7 +38,7 @@ Node* AST::createInnerNode(int symbol, std::vector<Node*> nodes, int prodNum) {
         if (n == cond || n == firstStmt || n == secondStmt) children.push_back(n);
         else delete n;
       }
-      return new Parent(symbol, children);
+      return new Parent(symbol, prodNum, children);
 
     } else if (prodNum == 3) { // STMT => WHILE ( EXPR ) STMT
       int L1 = newLabel();
@@ -54,7 +54,7 @@ Node* AST::createInnerNode(int symbol, std::vector<Node*> nodes, int prodNum) {
         if (n == cond || n == stmt) children.push_back(n);
         else delete n;
       }
-      return new Parent(symbol, children);
+      return new Parent(symbol, prodNum, children);
 
     } else if (prodNum == 4) {
       std::vector<Node*> children;
@@ -62,7 +62,7 @@ Node* AST::createInnerNode(int symbol, std::vector<Node*> nodes, int prodNum) {
       children.push_back(nodes[1]);
       children.push_back(nodes[2]);
       delete nodes[3];
-      return new Parent(symbol, children);
+      return new Parent(symbol, prodNum, children);
 
     } else if (prodNum == 5) {
       std::vector<Node*> children;
@@ -70,7 +70,7 @@ Node* AST::createInnerNode(int symbol, std::vector<Node*> nodes, int prodNum) {
       delete nodes[1];
       children.push_back(nodes[2]);
       delete nodes[3];
-      return new Parent(symbol, children);
+      return new Parent(symbol, prodNum, children);
 
     } else if (prodNum == 6) {
       delete nodes[0];
@@ -88,8 +88,9 @@ Node* AST::createInnerNode(int symbol, std::vector<Node*> nodes, int prodNum) {
       std::vector<Node*> children;
       children.push_back(nodes[0]);
       children.push_back(nodes[2]);
-      Node* newNode = new Parent(symbol, children);
-      newNode->op = nodes[1]->symbol;
+      Node* newNode = new Parent(symbol, prodNum, children);
+      newNode->op = operators[G->symbolToString(nodes[1]->symbol)];
+      newNode->temp = newTemp();
       return newNode;
 
     } else { // ID or NUM
@@ -97,8 +98,12 @@ Node* AST::createInnerNode(int symbol, std::vector<Node*> nodes, int prodNum) {
     } 
   } else if (symbol == G->serialize("STMTS")) { // STMTS => STMTS STMT
     if (prodNum == 0) {
-      static_cast<Parent*>(nodes[0])->children.push_back(nodes[1]);
-      return nodes[0];
+      if (nodes[0]->symbol == G->serialize("STMTS")) {
+        static_cast<Parent*>(nodes[0])->children.push_back(nodes[1]);
+        return nodes[0];
+      } else {
+        return new Parent(symbol, prodNum, nodes);
+      }
     } else {
       return nodes[0];
     }
@@ -110,7 +115,6 @@ Node* AST::createInnerNode(int symbol, std::vector<Node*> nodes, int prodNum) {
 }
 
 void AST::printAST() {
-  std::cout << "printing AST" << std::endl;
   printNode(root, 0);
 }
 
@@ -131,56 +135,125 @@ Node* AST::createLeafNode(int symbol, Token *token) {
   return new Leaf(symbol, token);
 }
 
-void AST::traverse(Node* node) {
+void AST::traverse(Node* node, Scope* scope) {
   Parent* p = dynamic_cast<Parent*>(node);
+  preProcessNode(node, scope);
+
   if (p != nullptr) {
     for (auto n: p->children) {
-      traverse(n);
+      traverse(n, node->scope);
     }
   }
+
   processNode(node);
 }
 
-void AST::processNode(Node* node) {
+void AST::preProcessNode(Node* node, Scope* scope) {
   if (node->start != 0) {
-    ir.label(node->start);
+     code.push_back(Tac::label(node->start));
   }
-  if (node->scope != 0 && node->scope != currentScope) {
-    if()
+  if (node->newScope) {
+    node->scope = newScope(scope);
+  } else {
+    node->scope = scope;
   }
+}
 
-  if (node->jump != 0) {
-    if (node->symbol == G.serialize("EXPR")) {
-      node->temp = newTemp();
-    } else if (node->symbol == G.serialize("STMT")) {
-      if (node->prodId == 4) {
-        // TODO: assign the id to the symbol table
-        //  Symbol Table
-        //  nested scopes
-        //  identifiers -> type
-      } else if (node->prodId == 5) {
-        // get the identifier from the symbol table 
-        // if the identifier does not exist
-        // check the type of the opk
-      }
+void AST::processNode(Node* node) {
+  if (node->symbol == G->serialize("NUM")) {
+    node->type = INT_TYPE;
+  } else if (node->symbol == G->serialize("EXPR")) {
+    // an expression will allways have 3 children
+    // and an operator
+    // a value is of type <TYPE, NUM>
+    // type = ID, temp, num
+    // num = id id or temp number or the actual value
+    Parent* parent = static_cast<Parent*>(node);
+    Node* c1 = parent->children[0];
+    Node* c2 = parent->children[1];
+    value v1 = c1->val();
+    value v2 = c2->val();
+
+    if (c1->type != c2->type) {
+      throw std::runtime_error("type error");
     }
-    std::cout << "IF (EXPR) GOTO " << node->jump << std::endl;
+
+    node->type = c1->type;
+
+    code.push_back(
+      Tac::expr(
+        node->temp,
+        node->op,
+        v1,
+        v2));
+
+    if (node->jump) {
+      code.push_back(Tac::conj(node->jump, node->temp));
+    }
+  } else if (node->symbol == G->serialize("STMT")) {
+    if (node->prodNum == 4) { // ID TYPE
+      Parent* p = static_cast<Parent*>(node);
+      Leaf* var = static_cast<Leaf*>(p->children[0]);
+      Leaf* type = static_cast<Leaf*>(p->children[1]);
+      IdToken* idtoken = static_cast<IdToken*>(var->token);
+      std::string id = idtoken->attr;
+      if (node->scope->contains(id)) {
+        throw std::runtime_error("id already declared in this scope");
+      }
+      symbolEntry* se = new symbolEntry;
+      se->id = id;
+      se->idNum = newId();
+      se->type = INT_TYPE;
+      node->scope->symbols.push_back(se);
+
+    } else if (node->prodNum == 5) { // ID EXPR
+      Parent* p = static_cast<Parent*>(node);
+      Leaf* var = static_cast<Leaf*>(p->children[0]);
+      Leaf* expr = static_cast<Leaf*>(p->children[1]);
+      IdToken* idtoken = static_cast<IdToken*>(var->token);
+      std::string id = idtoken->attr;
+      if (!node->scope->contains(id)) {
+        throw std::runtime_error("id not declared in this scope");
+      }
+
+      code.push_back(Tac::asg(node->scope->getIdNum(id), expr->temp));
+
+    } else if (node->prodNum == 6) { // PRINT EXPR
+      //code.push_back(Tac::print(expr.temp))
+    }
   }
 
   if (node->next != 0) {
-    ir.jump(node->label);
+    code.push_back(Tac::jump(node->next));
   }
+
   if(node->end != 0) {
-    ir.label(node->label);
+     code.push_back(Tac::label(node->end));
   }
 }
 
-std::string Parent::value() {
-
+value Parent::val() {
+  return {TEMP_VAL, temp};
 }
 
-std::string Leaf::value() {
+value Leaf::val() {
+  if (symbol == ID) {
+    IdToken* idtoken = static_cast<IdToken*>(token);
+    std::string id = idtoken->attr;
+    int n = scope->getIdNum(id);
+    symbolEntry se = scope->getId(n);
+    int idNum = se.idNum;
+    type = se.type;
+    if (idNum == -1) {
+      throw std::runtime_error("id not declared in this scope");
+    }
+    
+    return { ID_VAL, idNum };
+  } else if (symbol == NUM) {
 
+    NumToken* numtoken = static_cast<NumToken*>(token);
+    return { INT_VAL, numtoken->attr };
+  }
 }
 
 int AST::newLabel() {
@@ -191,6 +264,55 @@ int AST::newTemp() {
   return ++tempCounter;
 }
 
-int AST::newScope() {
-  return ++tempCounter;
+int AST::newId() {
+  return ++idCounter;
+}
+
+Scope* AST::newScope(Scope* scope) {
+  Scope* newScope =  new Scope(scope);
+  scope->children.push_back(newScope);
+  return newScope;
+}
+
+bool Scope::contains(std::string s) {
+  for (auto id: symbols) {
+    if (s == id->id) return true;
+  }
+
+  if (parent == NULL) {
+    return false;
+  } else {
+    return parent->contains(s);
+  }
+}
+
+int Scope::getIdNum(std::string s) {
+  for (auto id: symbols) {
+    if (s == id->id) {
+      return id->idNum;
+    }
+  }
+
+  if (parent == NULL) {
+    return -1;
+  } else {
+    return parent->getIdNum(s);
+  }
+}
+
+symbolEntry Scope::getId(int idnum) {
+  for (auto id: symbols) {
+    if (idnum == id->idNum) return *id;
+  }
+  if (parent == NULL) {
+    throw std::runtime_error("unable to find id");
+  } else {
+    return parent->getId(idnum);
+  }
+}
+
+void AST::printCode() {
+  for (auto c : code) {
+    c->print();
+  }
 }

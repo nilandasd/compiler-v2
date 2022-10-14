@@ -34,6 +34,13 @@
 #define PRINT  -23
 #define FOR    -24
 
+#define ACCEPT_STATE -25 
+#define DNE -26
+#define CURSOR -27
+#define ACCEPT -28
+#define AUGMENTED_START -29
+#define SHIFT -30
+#define REDUCE -31
 /*
 All other tokens that are neither of type ID, NUM, Reservered Words, 
 or two character relational operators, will be of base type Token, and 

@@ -18,7 +18,7 @@ void test_SLR() {
 
   SLR slr(G);
   slr.init();
-  // slr.print();
+  //slr.print();
 
   assert(slr.states.size() == 12);
 
@@ -457,7 +457,8 @@ void test_parse6() {
 
   lalr.parse(tokens, true);
   lalr.ast.printAST();
-  lalr.ast.traverse(lalr.ast.root);
+  lalr.ast.traverse(lalr.ast.root, lalr.ast.symbolTree);
+  lalr.ast.printCode();
 }
 
 int main() {

@@ -4,14 +4,8 @@
 
 #include <vector>
 #include <stdexcept>
+#include "token.hpp"
 
-#define ACCEPT_STATE 0
-#define DNE -1
-#define CURSOR -2
-#define ACCEPT -3
-#define AUGMENTED_START -4
-#define SHIFT -5
-#define REDUCE -6
 
 class Item {
   public:

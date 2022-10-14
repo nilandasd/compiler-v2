@@ -12,8 +12,7 @@ void test_constructors() {
 
   IdToken t("test");
   AST ast(&G);
-  Node node(G.serialize("EXPR"));
-  Parent Parent(G.serialize("EXPR"), std::vector<Node*> {});
+  Parent Parent(G.serialize("EXPR"), 0, std::vector<Node*> {});
   Leaf leaf(G.serialize("EXPR"), &t);
 }
 
@@ -28,9 +27,9 @@ void test_createNode() {
 
   AST ast(&G);
   std::vector<Node*> children;
-  Node* l1 = new Node(G.serialize("{"));
-  Node* l2 = new Node(G.serialize("}"));
-  Node* stmts = new Parent(G.serialize("STMTS"), std::vector<Node*> {});
+  Node* l1 = new Leaf(G.serialize("{"), 0);
+  Node* l2 = new Leaf(G.serialize("}"), 0);
+  Node* stmts = new Parent(G.serialize("STMTS"), 0, std::vector<Node*> {});
   children.push_back(l1);
   children.push_back(stmts);
   children.push_back(l2);
@@ -49,11 +48,11 @@ void test_createNode2() {
 
   AST ast(&G);
   std::vector<Node*> children;
-  Node* l1 = new Node(G.serialize("WHILE"));
-  Node* l2 = new Node(G.serialize("("));
-  Node* expr = new Parent(G.serialize("EXPR"), std::vector<Node*> {});
-  Node* l3 = new Node(G.serialize(")"));
-  Node* stmt = new Parent(G.serialize("STMT"), std::vector<Node*> {});
+  Node* l1 = new Leaf(G.serialize("WHILE"), 0);
+  Node* l2 = new Leaf(G.serialize("("), 0);
+  Node* expr = new Parent(G.serialize("EXPR"), 0, std::vector<Node*> {});
+  Node* l3 = new Leaf(G.serialize(")"), 0);
+  Node* stmt = new Parent(G.serialize("STMT"), 0, std::vector<Node*> {});
   children.push_back(l1);
   children.push_back(l2);
   children.push_back(expr);
