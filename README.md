@@ -11,22 +11,21 @@ Here is an example program that this compiler can read, along with the three add
 
 Input:
 
-var a int;
-var b int;
-
-while (a != b) {
-    if (a > b) {
-      a = a - b;
-    } else {
-      b = b - a;
-    }
-}
+var a int;  
+var b int; 
+ 
+while (a != b) { 
+    if (a > b) { 
+      a = a - b; 
+    } else { 
+      b = b - a; 
+    } 
+}  
 
 Output:
 
-LABEL 3
-
-t1 = i1 != i2
+LABEL 3   
+t1 = i1 != i2   
 IF t1 == 0 JUMP 4    
 t2 = i1 > i2       
 IF t2 == 0 JUMP 1  
