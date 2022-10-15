@@ -1,38 +1,39 @@
 # compiler-v2
 
-CHAPTER 4
+This was my first real attempt at writing a compiler.
 
-YAYYY TAKE A BREAK! come back on ( September 12th ) reading is okay though
+This compiler is only capable of compiling to three address code, and is probably filled with bugs,
+but it was a successful project in that it taught me a lot in how compilers work.
+If I continue studying compilers, I will probably create the next one in Rust instead of C++.
 
-add in error handling,
-Do lots of refactoring
-make lexer recognize floats
-add some tests!
-
-Start coding chapter 5 :)
-
-BENCHMARKING (creating the LALR(1) automaton from the grammar file 25 times)
-
-real 10.55
-user 10.44
-sys 0.10
-           261111808  maximum resident set size
-                   0  average shared memory size
-                   0  average unshared data size
-                   0  average unshared stack size
-               16452  page reclaims
-                   0  page faults
-                   0  swaps
-                   0  block input operations
-                   0  block output operations
-                   0  messages sent
-                   0  messages received
-                   0  signals received
-                   0  voluntary context switches
-                  93  involuntary context switches
-        134689214314  instructions retired
-         33912775482  cycles elapsed
-           259934912  peak memory footprint
+Here is an example program that this compiler can read, along with the three address code it creates for it.
 
 
+Input:
+var a int;
+var b int;
 
+while (a != b) {
+    if (a > b) {
+      a = a - b;
+    } else {
+      b = b - a;
+    }
+}
+
+Output:
+
+LABEL 3                                                                                             
+t1 = i1 != i2                                                                                       
+IF t1 == 0 JUMP 4                                 
+t2 = i1 > i2                                
+IF t2 == 0 JUMP 1                               
+t3 = i1 - i2                                     
+i1 = t3                                                                                             
+JUMP 2                                                                                              
+LABEL 1                                    
+t4 = i2 - i1                                                                                        
+i2 = t4                                                                                             
+LABEL 2                                     
+JUMP 3                                                                                              
+LABEL 4                                           
