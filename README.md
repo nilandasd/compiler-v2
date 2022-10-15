@@ -9,7 +9,7 @@ If I continue studying compilers, I will probably create the next one in Rust in
 Here is an example program that this compiler can read, along with the three address code it creates for it.
 
 
-Input:
+## Input:
 
 var a int;  
 var b int; 
@@ -22,7 +22,7 @@ while (a != b) {
     } 
 }  
 
-Output:
+## Output:
 
 LABEL 3   
 t1 = i1 != i2   
