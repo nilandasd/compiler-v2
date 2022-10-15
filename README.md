@@ -10,7 +10,8 @@ Here is an example program that this compiler can read, along with the three add
 
 
 Input:
-var a int;
+
+`var a int;
 var b int;
 
 while (a != b) {
@@ -19,11 +20,11 @@ while (a != b) {
     } else {
       b = b - a;
     }
-}
+}`
 
 Output:
 
-LABEL 3                                                                                             
+`LABEL 3                                                                                             
 t1 = i1 != i2                                                                                       
 IF t1 == 0 JUMP 4                                 
 t2 = i1 > i2                                
@@ -36,4 +37,4 @@ t4 = i2 - i1
 i2 = t4                                                                                             
 LABEL 2                                     
 JUMP 3                                                                                              
-LABEL 4                                           
+LABEL 4`
